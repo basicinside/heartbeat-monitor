@@ -1,8 +1,24 @@
-<h3>Gerät hinzufügen</h3>
-<form>
-<br>
-<b>Geräte ID</d>
-<br>
-<input type='text' name='node_id' id='node_id' size='30' />
-<input type='submit' value='Hinzufüge' />
-</form>
+<div id="page">
+	Die Geräte ID wird automatisch vom <i>Heartbeat Paket</i> auf dem Router erstellt. Um deinen Router mit deinem Benutzer zu verknüpfen, füge sie in das unten stehende Formular ein. Um einen Router zu registrieren, muss er bereits einen Heartbeat zum Server gesendet haben.
+	<br />
+	<br />
+	<fieldset>
+		<form>
+			<b>Geräte ID</b>
+			<br />
+			<input type='text' name='node_id' id='node_id' size='30' />
+			<input type='submit' value='Hinzufügen' />
+		</form>
+	</fieldset>
+
+	<br />
+
+	<h2>Geräte ID von Webinterface abfragen</h2>
+	Logge dich in die Administration deines Routers ein. Wähle das Heartbeat Menü aus. Dort findest du im unteren Abschnitt die Geräte ID.
+	<br />
+	<br />
+	<h2>Geräte ID manuell abfragen</h2>
+	<pre>
+	ssh root@DEINE_ROUTER_IP uci get system.@system[0].nodeid
+	</pre>
+</div>

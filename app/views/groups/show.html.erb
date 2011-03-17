@@ -1,23 +1,13 @@
-<p>
-  <b>Name:</b>
-  <%=h @group.name %>
-</p>
+<div id=node_green>	
+	<div id='punkte'><%= @group.score %> Punkte</div> 
+	<div id=node-name><%= @group.name %></div> <br /> 
+	<div id="details"> 
+		<div id=node-details-left>
+			<b>Benutzer</b><ul><% for user in @group.users.sort { |u1,u2| u2.score <=> u1.score } %>
+				<li><a href='/users/<%= user.id %>'><%= user.username %></a> (<%= user.score %> Punkte)</li>
+			<% end %></ul>
+		</div>
+		<br /><i><%= @group.description %></i>
+	</div>
+</div>
 
-<p>
-  <b>Description:</b>
-  <%=h @group.description %>
-</p>
-
-<p>
-  <b>Homepage:</b>
-  <%=h @group.homepage %>
-</p>
-
-<p>
-  <b>Province:</b>
-  <%=h @group.province %>
-</p>
-
-
-<%= link_to 'Edit', edit_group_path(@group) %> |
-<%= link_to 'Back', groups_path %>

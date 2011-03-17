@@ -22,3 +22,14 @@ config.action_controller.perform_caching             = false
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
+
+
+class ActionController::Base
+  def log_processing
+    if logger
+      logger.info "\n\nProcessing #{controller_class_name}\##{action_name} (#{Time.now.to_s(:db)}) [#{request.method.to_s.upcase}]"
+      logger.info "  Session ID: #{@_session.session_id}" if @_session and @_session.respond_to?(:session_id)
+      logger.info "  Parameters: #{respond_to?(:filter_parameters) ? filter_parameters(params).inspect : params.inspect}"
+    end
+  end
+end

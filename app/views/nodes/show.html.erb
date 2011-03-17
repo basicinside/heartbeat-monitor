@@ -1,41 +1,44 @@
 <%= javascript_include_tag 'prototype' %>  <%= map_layers_includes %>
 
-<h3>Geräteansicht</h3>
-<table>
-<tr>
-<td align='right'> <b>Name:</b></td>
-<td>  <%=h @node.name %></td>
-</tr><% if @node.user %><tr>
-<td align='right'> <b>Betreiber:</b></td>
-<td>  <%=h link_to @node.user.username, @node.user %></td>
-</tr><% end %><tr><td align='right'><b>Bilder</b></td><td>
-<% for photo in @node.photos %>
-  <%= image_tag photo.data.url(:thumb), :alt => "" %>
-<% end %></td>
-</tr><tr>
-<td align='right'>   <b>Version:</b></td>
-<td>  <%=h @node.version %></td>
-</tr><tr>
-<td align='right'> <b>Benutzer:</b></td>
-<td> 
-<%= image_tag "/clients/#{@node.id}.png" %>  </td>
-</tr><tr>
-<td align='right'>  <b>Nachbarn:</b></td>
-<td> <%= image_tag "/neighbors/#{@node.id}.png" %>  </td>
-</tr><tr>
-<td align='right'>   <b>geographische Position:</b></td>
-<td>  <div id="map" style="width: 300px; height: 200px;"></div>
-
-  <%= @map.to_html %>
-
-<a href='/maps/index?zoom=15&lat=<%=h @node.lat %>&lon=<%=h @node.lon %>'>auf Karte anzeigen</a></td>
-</tr><tr>
-<td align='right'>   <b>Punkte:</b></td>
-<td>  <%=h @node.score_count %></td>
-</tr></table>
 
 
-<%= link_to 'Zur Übersicht', nodes_path %>
-<% permitted_to? :edit, :nodes do %>
-<%= link_to 'Bearbeiten', edit_node_path %>
-<% end %>
+<div id=node_green>	
+			<div id='punkte'><%= @node.score_count %> Punkte</div>
+			<div id=node-name><%= @node.name %></div> <br />
+			<div id="details"> 
+		       	<div id=node-details-left>	
+				<div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
+				<div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br />
+				<div id='node-position'>  <b>Umgebung:</b> <br />
+					<div id="map"> </div>
+					<script defer="defer" type="text/javascript"> 
+						var map;
+						map = new OpenLayers.Map('map', {theme : false,displayProjection : new OpenLayers.Projection("EPSG:4326"),projection : new OpenLayers.Projection("EPSG:4326")});
+						map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"),{projection : new OpenLayers.Projection("EPSG:4326")});
+	var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
+		       {
+			format: OpenLayers.Format.KML, 
+			formatOptions: {
+			  extractStyles: true, 
+			  extractAttributes: true
+			},
+					projection: map.displayProjection
+		       });
+	 
+		    map.addLayer(kml);
+						map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),15);
+					</script> 
+					<a href='/maps/index?zoom=15&lat=<%= @node.lat %>&lon=<%= @node.lon %>'>auf Karte anzeigen</a>
+				</div>
+			  </div>
+				<% if @node.user %>	
+				  von <a href=''><%= @node.user.username %></a> 
+				  <% if @node.group %>  ( <a href=''><%= @node.group.name %></a>) <% end %>
+				  <% if @node.user.location %> <br />aus <i><%= @node.user.location.province.name + " - " + @node.user.location.name %></i><br /><% end %>
+				  <br />
+				<% end %>
+				<div id=node-desc></div>
+				<div id='node-users'>     <b>Benutzer</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
+				<div id='node-neighbors'> <b>Nachbarn</b> <br /> <img src="http://heartbeat.basicinside.de/neighbors/<%= @node.id %>.png" />  </div> 
+		  </div>
+</div>

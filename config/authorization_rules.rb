@@ -1,8 +1,10 @@
 authorization do
   
   role :guest do
-    has_permission_on :nodes, :to => [:index, :show, :georss, :status]
-		has_permission_on :bugreports, :to => [:index, :show]
+    has_permission_on :nodes, :to => [:index, :show, :georss, :status, :feed]
+    has_permission_on :bugreports, :to => [:index, :show]
+    has_permission_on :locations, :to => [:index, :show]
+    has_permission_on :groups, :to => [:index, :show]
   end
   
   

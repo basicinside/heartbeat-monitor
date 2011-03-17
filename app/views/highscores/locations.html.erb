@@ -1,23 +1,10 @@
-<h3>Highscore nach Parteien</h3>
-
-<table width='60%'>
-  <tr>
-    <th>Platz</th>
-    <th>Name</th>
-    <th>Punkte</th>
-  </tr>
-
-<% counter = 0 
-for location in @locations
-counter += 1 %>
-  <tr>
-    <td><%= counter %>.</td>
-    <td><%= link_to location.name, location %></td>
-
-    <td><center><%=h location.score %></center></td>
-
-  </tr>
+<% counter = 0
+ for location in @locations 
+counter += 1%>
+<div id="node_green">
+	<div id="punkte"><%= location.score %> Punkte</div> 
+       	<div id="details"> 
+        <b><%= counter %>. <a href='/locations/<%= location.id %>'><%= location.province.name + " - " + location.name %></a></b> 
+	</div> 
+</div>
 <% end %>
-</table>
-
-

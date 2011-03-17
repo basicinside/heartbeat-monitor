@@ -1,24 +1,11 @@
-<h3>Highscore nach Gruppen</h3>
-
-<table width='60%'>
-  <tr>
-<th>Platz</th>
-    <th>Name</th>
-    <th>Punkte</th>
-  </tr>
-
-<% 
-counter = 0
-for group in @groups 
+<% counter = 0
+ for group in @groups 
 counter += 1%>
-  <tr>
-    <td><%= counter %>.</td>
-    <td><%= link_to group.name, group %></td>
-
-    <td><center><%=h group.score %></center></td>
-
-  </tr>
+<div id="node_green">
+	<div id="punkte"><%= group.score %> Punkte</div> 
+       	<div id="details"> 
+        <b><%= counter %>. <a href='/groups/<%= group.id %>'><%= group.name %></a></b> 
+	<% if group.description %><br /><i><%= group.description %></i><% end %>
+	</div> 
+</div>
 <% end %>
-</table>
-
-

@@ -1,39 +1,34 @@
- <% form_for @user do |form| %>  
- <%= form.error_messages %>  
-   
-   <br />  
-     <%= form.label :username, "Benutzername" %>  
-     <%= form.text_field :username %>  
-   <br />  
-     <%= form.label :email, "Email" %>  
-     <%= form.text_field :email %>  
-	  <br />  
-		<%= form.label :location, "Gebiet" %>
-		<%= form.collection_select :location_id, Location.all, :id, :name %>
-		oder <%= link_to "Gebiet hinzufügen", new_location_url %>
-	  <br />  
-		<%= form.label :group, "Gruppe" %>
-		<%= form.collection_select :group_id, Group.all, :id, :name %>
-		oder <%= link_to "Gruppe hinzufügen",new_group_url %>
-	 <br />
-		<%= form.label :party, "Partei" %>
-		<%= form.collection_select :party_id, Party.all, :id, :name %>
-		oder <%= link_to "Partei hinzuf�gen", new_party_url %>
-	 <br />
-	
-		<% if @user.openid_identifier.blank? %>
-  	   <%= form.label :password, "Kennwort" %>  
-    	 <%= form.password_field :password %>  
-   	<br />  
-    	<%= form.label :password_confirmation, "Kennwort Bestätigung" %>  
-    	<%= form.password_field :password_confirmation %>  
-   	<br />  
-     	<%= form.submit "Speichern" %>  
-	<h3>Oder benutze OpenID</h3>
-	<% end %>
-	<%= form.label :openid_identifier, "OpenID URL" %><br />
-  <%= form.text_field :openid_identifier %>
-  <%= form.submit "Speichern" %>
+<div id="page"> 
+	<% form_for @user do |form| %>  
+	 <%= form.error_messages %>  
+	   
+	     <%= form.label :username, "Benutzername" %>  
+	     <%= form.text_field :username %>  
+	   <br />  
+	     <%= form.label :email, "Email" %>  
+	     <%= form.text_field :email %>  
+		  <br />  
+			<%= form.label :location, "Gebiet" %>
+			<%= form.collection_select :location_id, Location.all, :id, :name %>
+			oder <%= link_to "Gebiet hinzufuegen", new_location_url %>
+		  <br />  
+			<%= form.label :group, "Gruppe" %>
+			<%= form.collection_select :group_id, Group.all, :id, :name %>
+			oder <%= link_to "Gruppe hinzufuegen",new_group_url %>
+		 <br />
+			<%= form.label :party, "Partei" %>
+			<%= form.collection_select :party_id, Party.all, :id, :name %>
+			oder <%= link_to "Partei hinzufuegen", new_party_url %>
+		 <br />
+		
+		 <%= form.label :password, "Kennwort aendern" %>  
+		 <%= form.password_field :password %>  
+		<br />  
+		<%= form.label :password_confirmation, "Kennwort Bestaetigung" %>  
+		<%= form.password_field :password_confirmation %>  
+		<br />  
+		<%= form.submit "Speichern" %>  
 
 
- <% end %>
+	 <% end %>
+</div>

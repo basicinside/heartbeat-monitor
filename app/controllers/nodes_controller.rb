@@ -16,8 +16,9 @@ if @node.photos.first.nil?
   # GET /nodes.xml
   def index
 	last_seen = Date.today - 7.days
-    @nodes = Node.find(:all, :conditions => ["nodes.name != '' AND last_seen > '#{last_seen}'"],  :select => "nodes.*, SUM(scores.score) AS score ",
-                :joins => :scores, :group => 'nodes.id', :order => 'SUM(scores.score) DESC')
+    @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.user_id, nodes.last_seen, SUM(scores.score) AS score ",
+                :joins => [:scores], :group => 'nodes.id, nodes.name, nodes.user_id, nodes.last_seen', :order => 'SUM(scores.score) DESC')
+    #@nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"], :joins => :scores, :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -80,6 +81,20 @@ if @node.photos.first.nil?
   end
 end
 			
+#	def feed
+#		@nodes = {}
+#		render :layout => false
+#	end
+
+  def feed
+    last_seen = Date.today - 7.days
+    @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.last_seen, nodes.lat, nodes.lon, SUM(scores.score) AS score ",
+                :joins => [:scores], :group => 'nodes.id, nodes.name, nodes.last_seen, nodes.lat, nodes.lon', :order => 'SUM(scores.score) DESC')
+
+    @styles = []
+    @styles = [["wireless", "http://heartbeat.basicinside.de/images/flag.png"]]
+    render :layout => false
+  end
 
   # GET /nodes/1
   # GET /nodes/1.xml
@@ -115,12 +130,12 @@ end
 
 	max_clients = clients.max + 10 - (clients.max % 10)
 	open("/home/robin/www/heartbeat.basicinside.de/public/clients/#{@node.id}.png", 'wb') do |f|
-  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=600x150&chd=t:#{clients.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_clients}&chxr=0,0,#{max_clients},5")).read
+  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=500x150&chf=bg,s,dddddd00&chd=t:#{clients.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_clients}&chxr=0,0,#{max_clients},5")).read
 	end
 
 	max_neighbors = neighbors.max + 10 - (neighbors.max % 10)
 	open("/home/robin/www/heartbeat.basicinside.de/public/neighbors/#{@node.id}.png", 'wb') do |f|
-  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=600x150&chd=t:#{neighbors.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_neighbors}&chxr=0,0,#{max_neighbors},1")).read
+  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=500x150&chf=bg,s,dddddd00&chd=t:#{neighbors.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_neighbors}&chxr=0,0,#{max_neighbors},1")).read
 	end
 
 
@@ -145,8 +160,12 @@ end
 		params[:version]  ||= params[:rev]
 		params[:neighbors] ||= params[:neighboors]
   	#check for node
-		
-  	node = Node.find_or_create_by_node_id(params[:node_id]) 
+	
+	# node exists without heartbeat
+	node = Node.find_by_name(params[:name], :conditions => ['id = NULL'])	
+        if node.nil?
+  		node = Node.find_or_create_by_node_id(params[:node_id]) 
+	end
 		
 		#update or create values
 		node.version 	= params[:version] 		if params[:version]

@@ -3,18 +3,15 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.xml
   def index
-    @groups = Group.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @groups }
-    end
+	redirect_to "/highscores/groups/"
   end
 
   # GET /groups/1
   # GET /groups/1.xml
   def show
-    @group = Group.find(params[:id])
+    last_seen = Date.today - 7.days
+    @group = Group.find(:first,  :select => "groups.id, groups.name, groups.description, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}' AND groups.id = #{params[:id]}"],
+                :joins =>  {:users => {:nodes => :scores}}, :group => "groups.id, groups.name, groups.description", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # show.html.erb

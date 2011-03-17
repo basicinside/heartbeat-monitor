@@ -3,8 +3,8 @@ class HighscoresController < ApplicationController
   # GET /nodes.xml
   def groups
     last_seen = Date.today - 7.days
-    @groups = Group.find(:all,  :select => "groups.id, groups.name, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}'"],
-                :joins =>  {:users => {:nodes => :scores}}, :group => "groups.id", :order => 'SUM(scores.score) DESC')
+    @groups = Group.find(:all,  :select => "groups.id, groups.name, groups.description, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}'"],
+                :joins =>  {:users => {:nodes => :scores}}, :group => "groups.id, groups.name, groups.description", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,8 +14,8 @@ class HighscoresController < ApplicationController
 
    def users
     last_seen = Date.today - 7.days
-    @users = User.find(:all,  :select => "users.id, users.username, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}'"],
-                :joins =>  {:nodes => :scores}, :group => "users.id", :order => 'SUM(scores.score) DESC')
+    @users = User.find(:all,  :select => "users.id, users.username, users.group_id, users.location_id, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}'"],
+                :joins =>  {:nodes => :scores}, :group => "users.id, users.username, users.group_id, users.location_id", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -50,7 +50,7 @@ class HighscoresController < ApplicationController
 
    def parties
     last_seen = Date.today - 7.days
-    @parties = Party.find(:all,  :select => "parties.id, parties.name, SUM(scores.score) AS score",  :conditions => ["nodes.last_seen > '#{last_seen}'"],
+    @parties = Party.find(:all,  :select => "parties.*, SUM(scores.score) AS score",  :conditions => ["nodes.last_seen > '#{last_seen}'"],
                 :joins =>  {:users => {:nodes => :scores}}, :group => "parties.id", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
@@ -60,8 +60,8 @@ class HighscoresController < ApplicationController
   end
    def locations
     last_seen = Date.today - 7.days
-    @locations = Location.find(:all,  :select => "locations.id, locations.name, SUM(scores.score) AS score",  :conditions => ["nodes.last_seen > '#{last_seen}'"],
-                :joins =>  {:users => {:nodes => :scores}}, :group => "locations.id", :order => 'SUM(scores.score) DESC')
+    @locations = Location.find(:all,  :select => "locations.name, locations.id, locations.province_id, SUM(scores.score) AS score",  :conditions => ["nodes.last_seen > '#{last_seen}'"],
+                :joins =>  {:users => {:nodes => :scores}}, :group => "locations.id, locations.name, locations.province_id", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # index.html.erb

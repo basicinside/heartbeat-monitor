@@ -1,11 +1,97 @@
-<%= javascript_include_tag 'prototype' %>  <%= map_layers_includes %>
-<h3>Kartenansicht</h3>
 
-
-
-  <div id="map" style="width: 100%; height: 450px;"></div>
-
-  <%= @map.to_html %>
-
-
-
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+  <head> 
+    <script src="http://www.openlayers.org/api/OpenLayers.js"></script> 
+    <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script> 
+ 
+    <script type="text/javascript"> 
+        
+        var map;
+ 
+        function init(){
+ 
+            // Karte (passend für OSM)
+			map = new OpenLayers.Map('map',
+                    { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+                      numZoomLevels: 19,
+                      maxResolution: 156543.0399,
+                      units: 'm',
+                      projection: new OpenLayers.Projection("EPSG:900913"),
+                      displayProjection: new OpenLayers.Projection("EPSG:4326")
+                    });
+		map.addControl(new OpenLayers.Control.Permalink("permalink"));
+            // Mapnik und Osmarender als Kartenlayer
+            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+			var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
+ 
+			map.addLayers([layerMapnik,layerTah]);
+            
+            // Layer für die KML-Daten
+            var kml = new OpenLayers.Layer.GML("Nodes", "http://heartbeat.basicinside.de/nodes/feed", 
+               {
+                format: OpenLayers.Format.KML, 
+                formatOptions: {
+                  extractStyles: true, 
+                  extractAttributes: true
+                },
+				projection: map.displayProjection
+               });
+ 
+            map.addLayer(kml);
+ 
+ 
+            
+            // Events für die Objekte der KML-Daten
+            kml.events.on({
+                'featureselected': onFeatureSelect,
+                'featureunselected': onFeatureUnselect
+            });
+ 
+            // Eventhandler (erzeugen für Layer KML, starten)
+			var control = new OpenLayers.Control.SelectFeature(kml);
+            map.addControl(control);
+            control.activate();
+            
+            map.addControl(new OpenLayers.Control.LayerSwitcher());
+ 
+			var lonLat = new OpenLayers.LonLat(13.32466, 52.51345).transform(map.displayProjection,  map.projection);
+    		map.setCenter (lonLat, 6); 
+ 
+            // wird beim Schließen des Popups aufgerufen
+            function onPopupClose(evt) {
+                control.unselect(this.feature);
+            }
+            // wird beim anklicken des Objekts in der Karte aufgerufen
+            function onFeatureSelect(evt) {
+                feature = evt.feature;
+                // popup ist ein AnchoredBubble in 120x16px
+                popup = new OpenLayers.Popup.AnchoredBubble("featurePopup",
+                                         feature.geometry.getBounds().getCenterLonLat(),
+                                         new OpenLayers.Size(120,16),
+                                         feature.attributes.name,
+                                         null, true, onPopupClose);
+                feature.popup = popup;
+                popup.feature = feature;
+                map.addPopup(popup);
+            }
+            // wird beim abwählen des Objekts aufgerufen
+            function onFeatureUnselect(evt) {
+                feature = evt.feature;
+                if (feature.popup) {
+                    popup.feature = null;
+                    map.removePopup(feature.popup);
+                    feature.popup.destroy();
+                    feature.popup = null;
+                }
+            }
+            
+        }
+    </script> 
+    <title>heartbeat.basicinside.de - Karte </title> 
+  </head> 
+  <body onLoad="init()"> 
+ 
+    <div id="map"></div> 
+ 
+  </body> 
+</html> 

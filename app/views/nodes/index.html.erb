@@ -1,36 +1,27 @@
 <% counter = 0 %>
-<h3>Knoten anzeigen (<%= @nodes.count %>) </h3>
-
-<table border="0" cellspacing="0" width='100%' >
-  <tr>
-<th>Platz</th>
-    <th>Name</th>
-    <th>Betreiber</th>
-    <th>Gruppe</th>
-    <th>Punkte</th>
-    <th>Version</th>
-
-
-  </tr>
 <% for node in @nodes 
 counter += 1 %>
-  <% if node.last_seen + 1.day >= Date.today %>
-  	<tr bgcolor="#33CC00">
-  <% elsif node.last_seen + 7.days > Date.today %>
-  	<tr bgcolor="#FFFF00">
-  <% else %>
-  	<tr bgcolor="#FF3300">
-  <%end %>
-<td align='center'><%= counter %>.</td>
-    <td align='center'><%= link_to node.name, node %></td>
-    <td align='center'><%= node.user.username if node.user %></td>
-    <td align='center'><%= node.group.name if node.group %></td>
-    <td align='center'><%=h    node.score %></td>
-    <td align='center' width='120px' bgcolor="#<%= Digest::MD5.hexdigest(node.version || "")[0..5] %>"><%=h node.version %></td>
-
-    
-  </tr>
+  <% if node.last_seen + 1.day >= Date.today 
+	color = 'green'
+     elsif node.last_seen + 7.days > Date.today 
+	color = 'yellow'
+     else
+        color = 'red'
+     end %>
+     <div id="node_<%= color %>">
+       <div id="punkte"><%= node.score_count %> Punkte</div>
+       <div id="details">
+         <b><%= counter %>. <a href='/nodes/<%= node.id %>'><%= node.name %></a></b>
+	 <% if node.user %><br />von <a href='/users/<%= node.user.id %>'><%= node.user.username %></a>
+	   <% if color == 'yellow' %>  <div id="vor">vor <%= (Date.today-node.last_seen) %> Tagen</div> <% end %>
+           <% if node.group %> ( <a href=''><%= node.group.name %></a> ) <% end %>
+           <% if node.user.location %> <br />aus <i><%= node.user.location.province.name + " - " + node.user.location.name %></i><% end %>
+	<% else %>
+	 <% if color == 'yellow' %>  <br /><div id="vor">vor <%= (Date.today-node.last_seen) %> Tagen</div><br /> <% end %>
+	 <% end %>
+	</div>
+     </div>
+ 	   
 <% end %>
-</table>
 
 

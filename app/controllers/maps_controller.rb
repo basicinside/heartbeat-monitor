@@ -39,9 +39,15 @@ style = OpenLayers::Style.new({ :cursor => "pointer" })
     	page << map.add_layer(Layer::GeoRSS.new("Nodes", "/nodes/georss", { :projection => OpenLayers::Projection.new("EPSG:4326"), 
     	 :icon => OpenLayers::Icon.new("/images/flag.png", OpenLayers::Size.new(20,20))}))
     	
+
+    	page << map.add_layer(Layer::GeoRSS.new("active nodes", "/nodes/feed", { :projection => OpenLayers::Projection.new("EPSG:4326"), 
+    	 :icon => OpenLayers::Icon.new("/images/logo.png", OpenLayers::Size.new(20,20))}))
+
     	lonlat =  OpenLayers::LonLat.new(@lon, @lat).transform(OpenLayers::Projection.new("EPSG:4326"), map.getProjectionObject())
     	page << map.set_center(lonlat, @zoom )     
 
     end
+	render :layout => false
+
 	end
 end
