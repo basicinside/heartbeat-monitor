@@ -93,6 +93,8 @@ ActiveRecord::Schema.define(:version => 20100622054220) do
     t.integer  "device_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string "default_ipv4"
+    t.text "description"
   end
 
   create_table "open_id_authentication_associations", :force => true do |t|

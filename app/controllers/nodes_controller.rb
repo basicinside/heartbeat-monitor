@@ -16,7 +16,7 @@ if @node.photos.first.nil?
   # GET /nodes.xml
   def index
 	last_seen = Date.today - 7.days
-    @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.user_id, nodes.last_seen, SUM(scores.score) AS score ",
+    @nodes = Node.find(:all, :conditions => ["score > 0 AND last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.user_id, nodes.last_seen, SUM(scores.score) AS score ",
                 :joins => [:scores], :group => 'nodes.id, nodes.name, nodes.user_id, nodes.last_seen', :order => 'SUM(scores.score) DESC')
     #@nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"], :joins => :scores, :order => 'SUM(scores.score) DESC')
 
@@ -88,8 +88,7 @@ end
 
   def feed
     last_seen = Date.today - 7.days
-    @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.last_seen, nodes.lat, nodes.lon, SUM(scores.score) AS score ",
-                :joins => [:scores], :group => 'nodes.id, nodes.name, nodes.last_seen, nodes.lat, nodes.lon', :order => 'SUM(scores.score) DESC')
+    @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"])
 
     @styles = []
     @styles = [["wireless", "http://heartbeat.basicinside.de/images/flag.png"]]
