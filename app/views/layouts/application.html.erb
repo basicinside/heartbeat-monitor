@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="de">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta http-equiv="content-script-type" content="text/javascript" />
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="screen">
+	<title><%= h(yield(:title) || "heartbeat.basicinside.de") %></title>
+	<%= javascript_include_tag :defaults %>
+</head>
+<body>
+<div id="container">
+	<div id="header"><h1>heartbeat monitor</h1></div>
+	<div id="menu">
+		<ul>
+			<li><a href="/">Übersicht</a></li>
+			<li><a href="/karte?lat=50.99993&lon=9.66797&zoom=6">Karte</a></li>
+			<li><a href="/highscores/index">Rangliste</a></li>
+		</ul>
+	</div>
+	<div id="leftnav">
+		
+
+	</div>
+	<div id="rightnav">
+		<br />
+		<div id="navheadline"><b>Mein Konto</b>
+			<div id="user">
+			<% if current_user %>
+			Mein Benutzer: <a href=''><%= current_user.username %></a><br />
+			Meine Punkte: <%= current_user.score %><br /><br />
+			<a href='/users/current/edit'>Profil bearbeiten</a><br />
+			<a href='/nodes/register'>Gerät hinzufügen</a><br />
+			<a href='/logout'>Abmelden</a>
+			
+			<% else %>
+				<% form_for UserSession.new do |form| %>
+				<%= form.label :username, "Login:<br />" %>
+				<%= form.text_field :username, :size => '23' %>
+				<br />
+				<%= form.label :password, "Passwort:<br />" %>
+				<%= form.password_field :password, :size => '23' %>
+				 <br />
+		 	       	<%= form.submit "Anmelden" %>
+				<% end %>
+			<% end %>
+			</div>
+		</div>
+		<br />
+		<div id="navheadline"><b>heartbeat monitor</b>
+		<div id="heartbeat">
+			
+			Der <i>heartbeat monitor</i> empfängt täglich die Anzahl der Benutzer und Nachbargeräte von Freifunk-Routern. Jedes Gerät erhält dafür Punkte. 
+			<ul>
+				<li>5 Punkte pro Rückmeldung</li>
+				<li>2 Punkte pro Benutzer</li>
+				<li>1 Punkt pro Nachbar</li>
+			</ul>
+			Du benötigst das <i>heartbeat</i> OpenWRT Paket auf deinem Router, um teilzunehmen. 
+			<br />
+			Es ist bereits in der <a href='http://wiki.freifunk.net/Freifunk_Berlin_Pberg:Firmware'>Firmware der Kiezfunker</a> enthalten und muss nur im Freifunkassistenten aktiviert werden.
+		</div></div>
+	</div>
+	<div id="content">
+		<% if flash && flash != {}  %>
+                <fieldset>
+                        <%- flash.each do |name, msg| -%>
+                        <%= msg %> <br />
+                	<% end %>
+       		</fieldset>
+        	<% end %> <br />
+		<%= yield %>
+	</div>
+	<div id="footer">Dieser Dienst wird gehostet von den <a href='http://www.kiezfunk.net'>Kiezfunkern</a> auf <a href='https://pberg.freifunk.net/moin'>pberg.freifunk.net</a>. Er wird betrieben von Robin Kuck (<i>robin # basicinside # de</i>).</div>
+</div>
+</body>
+</html>
