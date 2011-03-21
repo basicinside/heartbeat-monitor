@@ -8,6 +8,8 @@
 			<div id="details"> 
 		       	<div id=node-details-left>	
 				<div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
+                              <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
+                                <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
 				<div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br />
 				<div id='node-position'>  <b>Umgebung:</b> <br />
 					<div id="map"> </div>
@@ -38,7 +40,13 @@
 				  <br />
 				<% end %>
 				<div id=node-desc></div>
-				<div id='node-users'>     <b>Benutzer</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
-				<div id='node-neighbors'> <b>Nachbarn</b> <br /> <img src="http://heartbeat.basicinside.de/neighbors/<%= @node.id %>.png" />  </div> 
+                                  <b>Nachbarn</b> <br /> 
+                                  <ul><% @node.neighbors.each do |nnode| %>
+                                      <li><a href='/nodes/<%= nnode.id %>'><%= nnode.name %></a></li>
+                                    <% end %>
+                                  </ul>
+                                  <br />
+				<div id='node-users'>     <b>Statistiken</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
+                                </div> 
 		  </div>
 </div>

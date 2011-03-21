@@ -6,19 +6,26 @@
 # update or create nodes ([id, name,] default_ipv4, lat, lon)
 # update or create links ([id, ] node1, node2)
 
-class LatLonJSUpdate < ActiveRecord::Base
+class LatLonJSUpdate
 	def initialize(file)
 		return unless File.exists?(file)
 		fd = File.open(file)
+		fd_content = ""
 		begin
 			while (line = fd.readline)
+				fd_content += "#{line}"
+			end
+		rescue EOFError
+		end
+		begin
+			fd_content.each_line do |line|
 				mid_entry(line) if line =~ /Mid/
 				plink_entry(line) if line =~ /PLink/
 				link_entry(line) if line !~ /PLink/ && line =~ /Link/
 				node_entry(line) if line =~ /Node/  || line =~ /Self/
 				unknown_entry(line) if line !~ /Link/ && line !~ /Node/ && line !~ /Mid/ && line !~ /Self/
 			end
-		rescue EOFError
+		#rescue EOFError
 		end 	
 	end
 
@@ -29,14 +36,30 @@ class LatLonJSUpdate < ActiveRecord::Base
 	end
 
 	def plink_entry(entry)
+		data = entry.gsub(/'/, '').split(',')
+		data[0] = data[0].split('(')[1]
+		nodeA = Node.find(:first, :select => ['id, name'], :conditions => ['default_ipv4 = ?',data[0].strip])
+		nodeB = Node.find(:first, :select => ['id, name'], :conditions => ['default_ipv4 = ?',data[1].strip])
+
+		links = Link.find(:first, :conditions => ['(node1 = ? AND node2 =?) OR (node2 = ? AND node1 = ?)', 
+				  nodeA.id, nodeB.id, nodeA.id, nodeB.id])
+		if links.nil?
+			link = Link.new
+			link.node1 = nodeA.id
+			link.node2 = nodeB.id
+			link.quality = data[2].strip
+			link.last_seen = Date.today
+			link.save
+		else
+			links.last_seen = Date.today
+			links.save
+		end
 	end
 
 	def node_entry(entry)
-
 		data = entry.gsub(/'/, '').split(',')
 		data[0] = data[0].split('(')[1]
 		data[5] = data[5].split(')')[0]
-		a = ""
 		node = Node.find_or_create_by_name(data[5].strip)
 		node.name = data[5].strip
 		node.default_ipv4 = data[0].strip
@@ -44,7 +67,6 @@ class LatLonJSUpdate < ActiveRecord::Base
 		node.lon = data[2].strip
 		node.last_seen = Date.today - 5.days if node.last_seen.nil? || node.last_seen < (Date.today - 5.days)
 		node.save
-		puts "#{data[5]} #{data[0]} #{a}"
 	end
 
 	def self_entry(entry)

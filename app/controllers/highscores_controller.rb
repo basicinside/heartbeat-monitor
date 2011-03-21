@@ -26,7 +26,7 @@ class HighscoresController < ApplicationController
   def nodes
   last_seen = Date.today - 7.days
     @nodes = Node.find(:all,  :select => "nodes.*, SUM(scores.score) AS score", :conditions => ["nodes.last_seen > '#{last_seen}'"],
-                :joins =>  :scores, :group => "nodes.id", :order => 'SUM(scores.score) DESC')
+                :joins =>  :scores, :group => "nodes.*", :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
       format.html # index.html.erb

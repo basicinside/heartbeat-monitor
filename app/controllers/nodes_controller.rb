@@ -112,33 +112,6 @@ end
       lonlat =  OpenLayers::LonLat.new(@node.lon, @node.lat).transform(OpenLayers::Projection.new("EPSG:4326"), map.getProjectionObject())
       page << map.set_center(lonlat, 15 )
 		end
-		
-		#neighbors and clients chart
-		heartbeats = Heartbeat.find(:all, :conditions => ["node_id = ?", @node.id], :limit => '14', :order => 'date DESC')
-		clients = []
-		neighbors = []
-		dates = []
-		days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
-  	heartbeats.each { |beat|
-  		clients <<  beat.clients.to_i
-			neighbors << beat.neighbors.to_i
-			dates << beat.date.strftime("%d.%m") }
-		
-#http://chart.apis.google.com/chart?cht=bvg&chs=600x150&chd=t:7,24,18&chl=26.06|27.06|28.06&chxt=r
-#Use this
-
-	max_clients = clients.max + 10 - (clients.max % 10)
-	open("/home/robin/www/heartbeat.basicinside.de/public/clients/#{@node.id}.png", 'wb') do |f|
-  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=500x150&chf=bg,s,dddddd00&chd=t:#{clients.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_clients}&chxr=0,0,#{max_clients},5")).read
-	end
-
-	max_neighbors = neighbors.max + 10 - (neighbors.max % 10)
-	open("/home/robin/www/heartbeat.basicinside.de/public/neighbors/#{@node.id}.png", 'wb') do |f|
-  	f << open(URI.encode("http://chart.apis.google.com/chart?cht=bvg&chs=500x150&chf=bg,s,dddddd00&chd=t:#{neighbors.join(',')}&chl=#{dates.join('|')}&chxt=r&chds=0,#{max_neighbors}&chxr=0,0,#{max_neighbors},1")).read
-	end
-
-
-  
 
 	respond_to do |format|
       format.html # show.html.erb
