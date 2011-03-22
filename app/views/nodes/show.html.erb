@@ -10,7 +10,7 @@
 				<div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
                               <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
                                 <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
-				<div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br />
+                            <% if @node.version %><div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br /><% end %>
 				<div id='node-position'>  <b>Umgebung:</b> <br />
 					<div id="map"> </div>
 					<script defer="defer" type="text/javascript"> 
@@ -28,7 +28,19 @@
 		       });
 	 
 		    map.addLayer(kml);
-						map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),15);
+ var kml2 = new OpenLayers.Layer.GML("Nodes", "/links/feed", 
+                       {
+                        format: OpenLayers.Format.KML, 
+                        formatOptions: {
+                          extractStyles: true, 
+                          extractAttributes: true
+                        },
+                                        projection: map.displayProjection
+                       });
+         
+                    map.addLayer(kml2);
+
+						map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),16);
 					</script> 
 					<a href='/maps/index?zoom=15&lat=<%= @node.lat %>&lon=<%= @node.lon %>'>auf Karte anzeigen</a>
 				</div>
@@ -40,11 +52,13 @@
 				  <br />
 				<% end %>
 				<div id=node-desc></div>
+                                <% if @node.neighbors %>
                                   <b>Nachbarn</b> <br /> 
                                   <ul><% @node.neighbors.each do |nnode| %>
                                       <li><a href='/nodes/<%= nnode.id %>'><%= nnode.name %></a></li>
                                     <% end %>
                                   </ul>
+                                <% end %>
                                   <br />
 				<div id='node-users'>     <b>Statistiken</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
                                 </div> 

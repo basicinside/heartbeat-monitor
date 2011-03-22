@@ -30,6 +30,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :crews
  	map.nodes_georss 'nodes/georss', :controller => 'nodes', :action => 'georss'
  	map.nodes_feed 'nodes/feed', :controller => 'nodes', :action => 'feed'
+ 	map.links_feed 'links/feed', :controller => 'links', :action => 'feed'
   map.resources :nodes
 
     map.resources :maps, :as => 'karte'

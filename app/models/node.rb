@@ -23,6 +23,10 @@ class Node < ActiveRecord::Base
     neighbor_arr
   end
 
+  def map_desc
+    "test desc"
+  end
+
   def score_count
   	Score.sum('score', :conditions => ['node_id = ?', id])
   end

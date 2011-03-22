@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Heartbeat Links</name>
+    <description>KML Karte der aktiven Links innerhalb der letzten Woche</description>
+    <% @styles.each { |name, color, width| %>
+    <Style id="<%= name %>">
+      <LineStyle>
+        <color>dd<%= color %></color>
+        <width><%= width %></width>
+      </LineStyle>
+      <PolyStyle>
+        <color>dd<%= color %></color>
+      </PolyStyle>
+    </Style>
+    <% } %>
+    <% @links.each { |link| %>
+    <Placemark>
+    <name><%= link.from_node.name %> to <%= link.to_node.name %></name>
+      <styleUrl>#link</styleUrl>
+      <LineString>
+      <coordinates><%= link.from_node.lon %>,<%= link.from_node.lat %>,5000
+      <%= link.to_node.lon %>,<%= link.to_node.lat %>,5000
+      </coordinates>
+      </LineString>
+    </Placemark>
+    <% } %>
+  </Document>
+</kml>

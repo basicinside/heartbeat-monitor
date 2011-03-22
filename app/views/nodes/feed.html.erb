@@ -16,6 +16,7 @@
     <% @nodes.each { |node| %>
     <Placemark>
       <name><%= node.name %></name>
+      <description>Field</description>
       <styleUrl>#wireless</styleUrl>
       <Point>
         <coordinates><%= node.lon %>,<%= node.lat %></coordinates>

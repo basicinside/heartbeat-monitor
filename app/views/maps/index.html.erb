@@ -40,6 +40,17 @@
             map.addLayer(kml);
  
  
+            var kml2 = new OpenLayers.Layer.GML("Nodes", "http://heartbeat.basicinside.de/links/feed", 
+            {
+              format: OpenLayers.Format.KML, 
+              formatOptions: {
+                extractStyles: true, 
+                extractAttributes: true
+              },
+              projection: map.displayProjection
+            });
+            map.addLayer(kml2);
+
             
             // Events für die Objekte der KML-Daten
             kml.events.on({
