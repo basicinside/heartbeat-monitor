@@ -8,6 +8,7 @@ class Node < ActiveRecord::Base
 	has_one :party, :through => :user
 	has_one :location, :through => :user
 	has_many :heartbeats, :dependent => :destroy
+        has_many :services, :conditions => ["state = 'open' AND last_seen > ?", Date.today - 7.days]
 	has_many :scores, :dependent => :destroy
         has_many :links, :class_name => "Link", :finder_sql => 'SELECT * FROM links WHERE (node1 = #{id} OR node2 = #{id}) AND last_seen > \'#{Date.today - 7.days}\''
 
@@ -24,7 +25,14 @@ class Node < ActiveRecord::Base
   end
 
   def map_desc
-    "test desc"
+    desc = ""
+    desc = "<div id=\"punkte\">#{score_count} Punkte</div> <br />"
+    desc += "von #{user.username}" if user
+    desc += "( #{user.group.name} )" if user && user.group
+    desc += "<br />aus <i>#{user.location.province.name} - #{user.location.name}</i><br />" if user && user.location
+    desc += "<br />Freifunk IPv4: <a href='http://#{default_ipv4}'>#{default_ipv4}</a><br />" if default_ipv4
+    desc += "<br />#{description}" if description
+    "<![CDATA[#{desc}]]>"
   end
 
   def score_count
@@ -38,13 +46,4 @@ def photo_attributes=(photo_attributes)
   end
 end
   
-  def popup_info
-  	if name != ''
-  		"<h4><a href='/nodes/#{id}'>#{name}</a></h4>
-  		Firmware #{version}<br />
- 			#{score_count} Punkte"
- 		else
- 		""
- 		end
-  end
 end

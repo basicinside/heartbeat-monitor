@@ -52,7 +52,23 @@
 				  <br />
 				<% end %>
 				<div id=node-desc></div>
-                                <% if @node.neighbors %>
+                                <% if @node.services && !@node.services.empty?%>
+                                  <b>Dienste</b>
+                                  <ul><% @node.services.each do |service| 
+                                    next if service.port == 138
+                                    next if service.port == 139
+                                    link = "#{service.name}://#{@node.default_ipv4}"
+                                    link = "http://#{@node.default_ipv4}:8080" if service.port == 8080
+                                    link = "smb://#{@node.default_ipv4}" if service.port == 137
+                                    name = "#{@node.name} #{service.name.upcase}"
+                                    name = "#{@node.name} SHARE" if service.port == 137
+                                  %>
+                                  <li><a href='<%= link %>'><%= name %></a></li>
+
+                                <% end %>
+                              </ul>
+                                <% end %>
+                                <% if @node.neighbors && !@node.neighbors.empty? %>
                                   <b>Nachbarn</b> <br /> 
                                   <ul><% @node.neighbors.each do |nnode| %>
                                       <li><a href='/nodes/<%= nnode.id %>'><%= nnode.name %></a></li>

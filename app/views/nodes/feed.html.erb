@@ -15,8 +15,9 @@
     <% } %>
     <% @nodes.each { |node| %>
     <Placemark>
+      <id><%= node.id %></id>
       <name><%= node.name %></name>
-      <description>Field</description>
+      <description><%= node.map_desc %></description>
       <styleUrl>#wireless</styleUrl>
       <Point>
         <coordinates><%= node.lon %>,<%= node.lat %></coordinates>
