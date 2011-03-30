@@ -2,6 +2,8 @@ class Link < ActiveRecord::Base
 belongs_to :from_node, :class_name => "Node", :foreign_key => "node1"
 belongs_to :to_node, :class_name => "Node", :foreign_key => "node2"
 
+# return a style [COLOR, WIDTH] array
+# used on kml feed creation
 def color
   if quality == 1
     ["00FF00", 2]

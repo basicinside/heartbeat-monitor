@@ -1,7 +1,7 @@
 class LinksController < ApplicationController
 
   def feed
-    last_seen = Date.today - 7.days
+    last_seen = Date.today - 4.days
     @links = Link.find(:all, :conditions => ["last_seen > '#{last_seen}'"], :include => [:from_node, :to_node])
 
     @styles = []

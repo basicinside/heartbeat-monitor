@@ -8,7 +8,7 @@ class Node < ActiveRecord::Base
 	has_one :party, :through => :user
 	has_one :location, :through => :user
 	has_many :heartbeats, :dependent => :destroy
-        has_many :services, :conditions => ["state = 'open' AND last_seen > ?", Date.today - 7.days]
+        has_many :services, :conditions => ["state = 'open' AND last_seen > ?", Date.today - 4.days]
 	has_many :scores, :dependent => :destroy
         has_many :links, :class_name => "Link", :finder_sql => 'SELECT * FROM links WHERE (node1 = #{id} OR node2 = #{id}) AND last_seen > \'#{Date.today - 7.days}\''
 

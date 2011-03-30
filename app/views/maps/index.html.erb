@@ -4,122 +4,147 @@
     <link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="screen">
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script> 
     <script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script> 
- 
+
     <script type="text/javascript"> 
-        
-        var map;
- 
-        function init(){
- 
-            // Karte (passend für OSM)
-			map = new OpenLayers.Map('fullmap',
-                    { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
-                      numZoomLevels: 19,
-                      maxResolution: 156543.0399,
-                      units: 'm',
-                      projection: new OpenLayers.Projection("EPSG:900913"),
-                      displayProjection: new OpenLayers.Projection("EPSG:4326")
-                    });
-		map.addControl(new OpenLayers.Control.Permalink("permalink"));
-            // Mapnik und Osmarender als Kartenlayer
-            var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-			var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
-			map.addLayers([layerMapnik,layerTah]);
-            
-            // Layer für die KML-Daten
-            var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
-               {
-                format: OpenLayers.Format.KML, 
-                formatOptions: {
-                  extractStyles: true, 
-                  extractAttributes: true
-                },
-				projection: map.displayProjection
-               });
- 
-            map.addLayer(kml);
- 
- 
-            var kml2 = new OpenLayers.Layer.GML("Nodes", "/links/feed", 
-            {
-              format: OpenLayers.Format.KML, 
-              formatOptions: {
-                extractStyles: true, 
-                extractAttributes: true
-              },
-              projection: map.displayProjection
-            });
-            map.addLayer(kml2);
+
+      var map;
+
+      function init(){
+
+        // Karte (passend für OSM)
+        map = new OpenLayers.Map('fullmap',
+            { maxExtent: new OpenLayers.Bounds(-20037508.34,-20037508.34,20037508.34,20037508.34),
+numZoomLevels: 19,
+maxResolution: 156543.0399,
+units: 'm',
+projection: new OpenLayers.Projection("EPSG:900913"),
+displayProjection: new OpenLayers.Projection("EPSG:4326")
+});
+map.addControl(new OpenLayers.Control.Permalink("permalink"));
+
+var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
+var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
+map.addLayers([layerMapnik,layerTah]);
+
+var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
+    {
+format: OpenLayers.Format.KML, 
+formatOptions: {
+extractStyles: true, 
+extractAttributes: true
+},
+projection: map.displayProjection
+});
+
+map.addLayer(kml);
+
+var lengthPopup;
+var kml2 = new OpenLayers.Layer.GML("Nodes", "/links/feed", 
+    {
+format: OpenLayers.Format.KML, 
+formatOptions: {
+extractStyles: true, 
+extractAttributes: true
+},
+projection: map.displayProjection
+});
+map.addLayer(kml2);
 
 
-            
-            // Events für die Objekte der KML-Daten
-            kml.events.on({
-                'featureselected': onFeatureSelect,
-                'featureunselected': onFeatureUnselect
-            });
-                
- 
-            // Eventhandler (erzeugen für Layer KML, starten)
-			var control = new OpenLayers.Control.SelectFeature(kml);
-            map.addControl(control);
-            control.activate();
-            
-            map.addControl(new OpenLayers.Control.LayerSwitcher());
- 
-             var lon = 13.32466;
-             var lat = 52.51345;
-             var zoom = 6;
-          var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
-                          map.setCenter (lonLat, zoom); 
 
-            if (navigator.geolocation) {
-        // Use method getCurrentPosition to get coordinates
-        navigator.geolocation.getCurrentPosition(function (position) {
-                // Access them accordingly
-                lat = position.coords.latitude;
-                lon =  position.coords.longitude;
-                zoom = 13;
-                var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
-                                map.setCenter (lonLat, zoom); 
+var p = new OpenLayers.Control.Panel({'displayClass':'olControlEditingToolbar'});
 
-                });
+var m = new OpenLayers.Control.Measure(OpenLayers.Handler.Path, { displayClass: 'olControlDrawFeaturePath', geodesic: true});
+m.events.on({
+    "measure": onClickMeasure,
+    "measurepartial": onClickMeasure
+    });
+
+  function onClickMeasure(event) {
+    if (lengthPopup)
+      lengthPopup.hide();
+    var units = event.units;
+    var measure = event.measure;
+    lengthPopup = new OpenLayers.Popup.FramedCloud("featurePopup",
+        event.geometry.getBounds().getCenterLonLat(),
+        new OpenLayers.Size(120,100),
+        "<b>Laenge</b><br />"+measure.toFixed(3) + units,
+        null, true, onLengthPopupClose);
+    map.addPopup(lengthPopup);
+  }
+
+
+map.addControl(p);
+
+kml.events.on({
+    "featureselected": onFeatureSelect,
+    "featureunselected": onFeatureUnselect
+    });
+var control =  new OpenLayers.Control.SelectFeature(kml, { displayClass: 'olControlDrawFeaturePoint'});
+p.addControls([ new OpenLayers.Control.Navigation(), m, control ]);
+p.activateControl(p.controls[2]);
+map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+var lon = 13.32466;
+var lat = 52.51345;
+var zoom = 6;
+var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
+map.setCenter (lonLat, zoom); 
+
+if (navigator.geolocation) {
+  // Use method getCurrentPosition to get coordinates
+  navigator.geolocation.getCurrentPosition(function (position) {
+      // Access them accordingly
+      lat = position.coords.latitude;
+      lon =  position.coords.longitude;
+      zoom = 13;
+      var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
+      map.setCenter (lonLat, zoom); 
+
+      });
 }
- 
-            // wird beim Schließen des Popups aufgerufen
-            function onPopupClose(evt) {
-                control.unselect(this.feature);
-            }
-            // wird beim anklicken des Objekts in der Karte aufgerufen
-            function onFeatureSelect(evt) {
-                feature = evt.feature;
-                popup = new OpenLayers.Popup.FramedCloud("featurePopup",
-                                         feature.geometry.getBounds().getCenterLonLat(),
-                                         new OpenLayers.Size(120,100),
-                                         "<b><a href='/nodes/"+feature.attributes.id+"'>" +feature.attributes.name+"</a></b>"+feature.attributes.description,
-                                         null, true, onPopupClose);
-                feature.popup = popup;
-                popup.feature = feature;
-                map.addPopup(popup);
-            }
-            // wird beim abwählen des Objekts aufgerufen
-            function onFeatureUnselect(evt) {
-                feature = evt.feature;
-                if (feature.popup) {
-                    popup.feature = null;
-                    map.removePopup(feature.popup);
-                    feature.popup.destroy();
-                    feature.popup = null;
-                }
-            }
-            
-        }
-    </script> 
-    <title>heartbeat.basicinside.de - Karte </title> 
+
+// wird beim Schließen des Popups aufgerufen
+function onPopupClose(evt) {
+  control.unselect(this.feature);
+}
+
+function onLengthPopupClose() {
+  lengthPopup.hide();
+}
+
+
+
+// wird beim anklicken des Objekts in der Karte aufgerufen
+function onFeatureSelect(evt) {
+  feature = evt.feature;
+  popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+      feature.geometry.getBounds().getCenterLonLat(),
+      new OpenLayers.Size(120,100),
+      "<b><a href='/nodes/"+feature.attributes.id+"'>" +feature.attributes.name+"</a></b>"+feature.attributes.description,
+      null, true, onPopupClose);
+  feature.popup = popup;
+  popup.feature = feature;
+  map.addPopup(popup);
+}
+// wird beim abwählen des Objekts aufgerufen
+function onFeatureUnselect(evt) {
+  feature = evt.feature;
+  if (feature.popup) {
+    popup.feature = null;
+    map.removePopup(feature.popup);
+    feature.popup.destroy();
+    feature.popup = null;
+  }
+}
+
+}
+</script> 
+<title>heartbeat.basicinside.de - Karte </title> 
   </head> 
   <body onLoad="init()"> 
     <div id=page>
-    <div id="fullmap"></div> 
+      <div id="fullmap"></div> 
     </div>
   </body> 
 </html> 
