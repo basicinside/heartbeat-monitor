@@ -1,3 +1,3 @@
 class UserSession < Authlogic::Session::Base
-auto_register
+#auto_register
 end

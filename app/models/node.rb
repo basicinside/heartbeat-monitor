@@ -32,7 +32,7 @@ class Node < ActiveRecord::Base
     desc += "<br />aus <i>#{user.location.province.name} - #{user.location.name}</i><br />" if user && user.location
     desc += "<br />Freifunk IPv4: <a href='http://#{default_ipv4}'>#{default_ipv4}</a><br />" if default_ipv4
     desc += "<br />#{description}" if description
-    "<![CDATA[#{desc}]]>"
+    desc
   end
 
   def score_count

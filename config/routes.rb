@@ -1,87 +1,85 @@
-ActionController::Routing::Routes.draw do |map|
-
-  map.resources :locations
-  map.register_node 'nodes/register', :controller => 'nodes', :action => 'register'
-  map.resources :groups
-
-  map.login 'login', :controller => 'user_sessions', :action => 'new'  
-  map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'  
-  map.resources :user_sessions  
-  map.resources :users  
-  map.resources :devices, :as => 'device'
-  map.connect 'fehlerberichte/new', :controller => 'bugreports', :action => 'new',
-    :conditions => { :method => :post }
-
-  map.resources :bugreports, :as => 'fehlerberichte'
-
-  map.resources :lands, :as => 'laender' 
-
-  map.resources :landesverbands, :as => 'bundeslaender' 
-  #map.parteien 'parteien/:id', :controller => 'parties'
-  #map.parteien 'parteien/:action/:id', :controller => 'parties'
-  map.highscores 'highscores/:action', :controller => 'highscores'
-  map.resources :parties, :as => 'parteien'
-  #map.maps 'maps', :controller => 'maps', :action => 'index' 
-
-  #map.maps 'maps/:action', :controller => 'maps' 
-
-  map.resources :highscores
-
-  # API REST Functions
-  #map.resources :api
-  map.api_node 'api/node/:hostname/:ip', :controller => :api, :action => :node
-  map.api_node 'api/node/:hostname/:ip/:lat/:lon', :controller => :api, :action => :node
-
-  map.api_node 'api/link/:from_ip/:to_ip/:quality', :controller => :apis, :action => :link
-
-  map.resources :crews
-  map.nodes_georss 'nodes/georss', :controller => 'nodes', :action => 'georss'
-  map.nodes_feed 'nodes/feed', :controller => 'nodes', :action => 'feed'
-  map.links_feed 'links/feed', :controller => 'links', :action => 'feed'
-  map.resources :nodes
-
-  map.resources :maps, :as => 'karte'
-
-  # The priority is based upon order of creation: first created -> highest priority.
-
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-  # Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-
-  # Sample resource route with more complex sub-resources
-  #   map.resources :products do |products|
-  #     products.resources :comments
-  #     products.resources :sales, :collection => { :recent => :get }
-  #   end
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
-  # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
-  # map.root :controller => "welcome"
-  map.root :controller => "highscores"
-
-  # See how all your routes lay out with "rake routes"
-
-  # Install the default routes as the lowest priority.
-  # Note: These default routes make all actions in every controller accessible via GET requests. You should
-  # consider removing the them or commenting them out if you're using named routes and resources.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+HeartbeatMonitor::Application.routes.draw do
+  resources :locations
+  match 'nodes/register' => 'nodes#register', :as => :register_node
+  resources :groups
+  match 'login' => 'user_sessions#new', :as => :login
+  match 'logout' => 'user_sessions#destroy', :as => :logout
+  resources :user_sessions
+  resources :users
+  resources :devices
+  #match 'fehlerberichte/new' => 'bugreports#new', :via => post
+  resources :bugreports
+  resources :lands
+  resources :landesverbands
+  match 'highscores/:action' => 'highscores#index', :as => :highscores
+  resources :parties
+  resources :highscores
+  match 'api/node/:hostname/:ip' => 'api#node', :as => :api_node
+  match 'api/node/:hostname/:ip/:lat/:lon' => 'api#node', :as => :api_node
+  match 'api/link/:from_ip/:to_ip/:quality' => 'apis#link', :as => :api_node
+  resources :crews
+  match 'nodes/georss' => 'nodes#georss', :as => :nodes_georss
+  match 'nodes/feed' => 'nodes#feed', :as => :nodes_feed
+  match 'links/feed' => 'links#feed', :as => :links_feed
+  resources :nodes
+  match 'karte' => 'maps#index', :as => :karte
+  resources :maps
+  match '/' => 'highscores#index'
+  match '/:controller(/:action(/:id))'
 end
+# The priority is based upon order of creation:
+# first created -> highest priority.
+
+# Sample of regular route:
+#   match 'products/:id' => 'catalog#view'
+# Keep in mind you can assign values other than :controller and :action
+
+# Sample of named route:
+#   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
+# This route can be invoked with purchase_url(:id => product.id)
+
+# Sample resource route (maps HTTP verbs to controller actions automatically):
+#   resources :products
+
+# Sample resource route with options:
+#   resources :products do
+#     member do
+#       get 'short'
+#       post 'toggle'
+#     end
+#
+#     collection do
+#       get 'sold'
+#     end
+#   end
+
+# Sample resource route with sub-resources:
+#   resources :products do
+#     resources :comments, :sales
+#     resource :seller
+#   end
+
+# Sample resource route with more complex sub-resources
+#   resources :products do
+#     resources :comments
+#     resources :sales do
+#       get 'recent', :on => :collection
+#     end
+#   end
+
+# Sample resource route within a namespace:
+#   namespace :admin do
+#     # Directs /admin/products/* to Admin::ProductsController
+#     # (app/controllers/admin/products_controller.rb)
+#     resources :products
+#   end
+
+# You can have the root of your site routed with "root"
+# just remember to delete public/index.html.
+# root :to => "welcome#index"
+
+# See how all your routes lay out with "rake routes"
+
+# This is a legacy wild controller route that's not recommended for RESTful applications.
+# Note: This route will make all actions in every controller accessible via GET requests.
+# match ':controller(/:action(/:id(.:format)))'

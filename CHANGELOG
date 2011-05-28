@@ -1,6 +1,0 @@
-Tool to collect additional nodes from latlon.js file for map
-Added node default_ipv4
-Added links and servies table
-Database storage moved to psql
-New Design
-Map: KML Feed
