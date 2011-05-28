@@ -1,39 +1,46 @@
 ActionController::Routing::Routes.draw do |map|
 
   map.resources :locations
-	map.register_node 'nodes/register', :controller => 'nodes', :action => 'register'
+  map.register_node 'nodes/register', :controller => 'nodes', :action => 'register'
   map.resources :groups
 
-    map.login 'login', :controller => 'user_sessions', :action => 'new'  
-    map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'  
-    map.resources :user_sessions  
-	map.resources :users  
+  map.login 'login', :controller => 'user_sessions', :action => 'new'  
+  map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'  
+  map.resources :user_sessions  
+  map.resources :users  
   map.resources :devices, :as => 'device'
-	map.connect 'fehlerberichte/new', :controller => 'bugreports', :action => 'new',
-                :conditions => { :method => :post }
+  map.connect 'fehlerberichte/new', :controller => 'bugreports', :action => 'new',
+    :conditions => { :method => :post }
 
   map.resources :bugreports, :as => 'fehlerberichte'
 
   map.resources :lands, :as => 'laender' 
 
   map.resources :landesverbands, :as => 'bundeslaender' 
-	#map.parteien 'parteien/:id', :controller => 'parties'
-	#map.parteien 'parteien/:action/:id', :controller => 'parties'
-	map.highscores 'highscores/:action', :controller => 'highscores'
+  #map.parteien 'parteien/:id', :controller => 'parties'
+  #map.parteien 'parteien/:action/:id', :controller => 'parties'
+  map.highscores 'highscores/:action', :controller => 'highscores'
   map.resources :parties, :as => 'parteien'
-    #map.maps 'maps', :controller => 'maps', :action => 'index' 
-    
+  #map.maps 'maps', :controller => 'maps', :action => 'index' 
+
   #map.maps 'maps/:action', :controller => 'maps' 
 
-    map.resources :highscores
+  map.resources :highscores
+
+  # API REST Functions
+  #map.resources :api
+  map.api_node 'api/node/:hostname/:ip', :controller => :api, :action => :node
+  map.api_node 'api/node/:hostname/:ip/:lat/:lon', :controller => :api, :action => :node
+
+  map.api_node 'api/link/:from_ip/:to_ip/:quality', :controller => :apis, :action => :link
 
   map.resources :crews
- 	map.nodes_georss 'nodes/georss', :controller => 'nodes', :action => 'georss'
- 	map.nodes_feed 'nodes/feed', :controller => 'nodes', :action => 'feed'
- 	map.links_feed 'links/feed', :controller => 'links', :action => 'feed'
+  map.nodes_georss 'nodes/georss', :controller => 'nodes', :action => 'georss'
+  map.nodes_feed 'nodes/feed', :controller => 'nodes', :action => 'feed'
+  map.links_feed 'links/feed', :controller => 'links', :action => 'feed'
   map.resources :nodes
 
-    map.resources :maps, :as => 'karte'
+  map.resources :maps, :as => 'karte'
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -53,7 +60,7 @@ ActionController::Routing::Routes.draw do |map|
 
   # Sample resource route with sub-resources:
   #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-  
+
   # Sample resource route with more complex sub-resources
   #   map.resources :products do |products|
   #     products.resources :comments
@@ -68,13 +75,13 @@ ActionController::Routing::Routes.draw do |map|
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   # map.root :controller => "welcome"
-	map.root :controller => "nodes"
-	
+  map.root :controller => "highscores"
+
   # See how all your routes lay out with "rake routes"
 
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
-# consider removing the them or commenting them out if you're using named routes and resources.
+  # consider removing the them or commenting them out if you're using named routes and resources.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end

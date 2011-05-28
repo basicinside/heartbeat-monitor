@@ -2,49 +2,44 @@ class NodesController < ApplicationController
   require 'open-uri'
   require 'digest/md5'
   filter_access_to :all
-  map_layer :node, :text => :popup_info || :node_id, :lat => :lat || 0, :lon => :lon || 0, :id => :id
-  use_google_charts
-
-  def edit
-    @node = Node.find(params[:id])
-    if @node.photos.first.nil?
-      1.upto(3) { @node.photos.build }
-    end
-  end
 
   # GET /nodes
-  # GET /nodes.xml
+  # return nodes ordered by scores
+  # where last_seen < 7 days
   def index
     last_seen = Date.today - 7.days
-    @nodes = Node.find(:all, :conditions => ["score > 0 AND last_seen > '#{last_seen}'"],  :select => "nodes.id, nodes.name, nodes.user_id, nodes.last_seen, SUM(scores.score) AS score ",
-                       :joins => [:scores], :group => 'nodes.id, nodes.name, nodes.user_id, nodes.last_seen', :order => 'SUM(scores.score) DESC')
-    #@nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"], :joins => :scores, :order => 'SUM(scores.score) DESC')
+    @nodes = Node.find(:all, 
+                       :conditions => ["score > 0 AND last_seen > '#{last_seen}'"],  
+                       :select => "nodes.id, nodes.name, nodes.user_id, nodes.last_seen, SUM(scores.score) AS score ",
+                       :joins => [:scores], 
+                       :group => 'nodes.id, nodes.name, nodes.user_id, nodes.last_seen', 
+                       :order => 'SUM(scores.score) DESC')
 
     respond_to do |format|
-      format.html # index.html.erb
-      #format.xml  { render :xml => @nodes }
+      format.html
     end
   end
 
+  # register an existing node to user
   def register
     if params[:node_id]
       redirect_to "/nodes/register/#{params[:node_id]}"
       return
     end
-
     if params[:id] 
       if !current_user
         flash[:notice] = 'Bitte logge dich ein, um ein Gerät zu registrieren.'
         redirect_to root_url
       end
-
       if node = Node.find(:first, :conditions => ["node_id = ?", params[:id]])
         if node.user && node.user != current_user
-          flash[:notice] = "Das Gerät ist bereits vn <a href='/users/show/#{node.user.id}'>#{node.user.username}</a> registriert. Bitte wende dich an den Administrator."
+          flash[:notice] = "Das Gerät ist bereits von 
+          <a href='/users/show/#{node.user.id}'>#{node.user.username}</a> registriert. 
+          Bitte wende dich an den Administrator."
           redirect_to node
         else
-          flash[:notice] = "Das Gerätist nun registriert af <a href='/users/sho/#{current_user.id}'>#{current_user.username}</a>."
-
+          flash[:notice] = "Das Gerät ist nun registriert auf 
+          <a href='/users/show/#{current_user.id}'>#{current_user.username}</a>."
           node.user = current_user
           node.save
           redirect_to node
@@ -52,40 +47,16 @@ class NodesController < ApplicationController
       else
         flash[:notice] = "Das Gerät wurde nicht gefunden."
         redirect_to '/nodes/register'
-
       end
     else
       respond_to do |format|
-        format.html # index.html.erb
-        #format.xml  { render :xml => @nodes }
+        format.html
       end
     end
   end
 
-  def update
-    params[:photo_ids] ||= []
-    @node = Node.find(params[:id])
-    unless params[:photo_ids].empty?
-      Photo.destroy_pics(params[:id], params[:photo_ids])
-    end
 
-    respond_to do |format|
-      if @node.update_attributes(params[:node])
-        flash[:notice] = 'Node was successfully updated.'
-        format.html { redirect_to(@node) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @node.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-  #	def feed
-  #		@nodes = {}
-  #		render :layout => false
-  #	end
-
+  # KML feed of nodes for the map
   def feed
     last_seen = Date.today - 7.days
     @nodes = Node.find(:all, :conditions => ["last_seen > '#{last_seen}'"])
@@ -95,28 +66,12 @@ class NodesController < ApplicationController
     render :layout => false
   end
 
-  # GET /nodes/1
-  # GET /nodes/1.xml
+  # load a node from the database and display it
   def show
     @node = Node.find(params[:id])
 
-    #load minimap
-    @map = MapLayers::Map.new("map", :displayProjection => OpenLayers::Projection.new("EPSG:4326"),
-                              :projection => OpenLayers::Projection.new("EPSG:4326")) do |map, page|
-
-      page << map.add_layer(MapLayers::OSM_MAPNIK , :projection => OpenLayers::Projection.new("EPSG:4326"))
-
-      page << map.add_layer(Layer::GeoRSS.new("Nodes", "/nodes/georss", { :projection => OpenLayers::Projection.new("EPSG:4326"),
-                                              :icon => OpenLayers::Icon.new("/images/flag.png", OpenLayers::Size.new(20,20))}))
-
-      lonlat =  OpenLayers::LonLat.new(@node.lon, @node.lat).transform(OpenLayers::Projection.new("EPSG:4326"), map.getProjectionObject())
-      page << map.set_center(lonlat, 15 )
-                              end
-
     respond_to do |format|
-      format.html # show.html.erb
-      #format.xml  { render :xml => @node }
-      format.kml  { render :xml => @node }
+      format.html
     end
   end
 
@@ -174,9 +129,6 @@ class NodesController < ApplicationController
 
     end
 
-
-
-
     respond_to do |format|
       if node.save
         flash[:notice] = 'Node was successfully created.'
@@ -188,17 +140,4 @@ class NodesController < ApplicationController
       end
     end
   end
-
-
-  # DELETE /nodes/1
-  # DELETE /nodes/1.xml
-  #def destroy
-  #  @node = Node.find(params[:id])
-  #  @node.destroy
-
-  #  respond_to do |format|
-  #    format.html { redirect_to(nodes_url) }
-  #    format.xml  { head :ok }
-  #  end
-  #end
 end

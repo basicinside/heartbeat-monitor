@@ -3,80 +3,79 @@
 
 
 <div id=node_green>	
-			<div id='punkte'><%= @node.score_count %> Punkte</div>
-			<div id=node-name><%= @node.name %></div> <br />
-			<div id="details"> 
-		       	<div id=node-details-left>	
-				<div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
-                              <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
-                                <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
-                            <% if @node.version %><div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br /><% end %>
-				<div id='node-position'>  <b>Umgebung:</b> <br />
-					<div id="map"> </div>
-					<script defer="defer" type="text/javascript"> 
-						var map;
-						map = new OpenLayers.Map('map', {theme : false,displayProjection : new OpenLayers.Projection("EPSG:4326"),projection : new OpenLayers.Projection("EPSG:4326")});
-						map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"),{projection : new OpenLayers.Projection("EPSG:4326")});
-	var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
-		       {
-			format: OpenLayers.Format.KML, 
-			formatOptions: {
-			  extractStyles: true, 
-			  extractAttributes: true
-			},
-					projection: map.displayProjection
-		       });
-	 
-		    map.addLayer(kml);
- var kml2 = new OpenLayers.Layer.GML("Nodes", "/links/feed", 
-                       {
-                        format: OpenLayers.Format.KML, 
-                        formatOptions: {
-                          extractStyles: true, 
-                          extractAttributes: true
-                        },
-                                        projection: map.displayProjection
-                       });
-         
-                    map.addLayer(kml2);
+  <div id='punkte'><%= @node.score_count %> Punkte</div>
+  <div id=node-name><%= @node.name %></div> <br />
+  <div id="details"> 
+    <div id=node-details-left>	
+      <div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
+      <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
+        <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
+    <% if @node.version %><div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br /><% end %>
+      <div id='node-position'>  <b>Umgebung:</b> <br />
+        <div id="map"> </div>
+        <script defer="defer" type="text/javascript"> 
+          var map;
+          map = new OpenLayers.Map('map', {theme : false,displayProjection : new OpenLayers.Projection("EPSG:4326"),projection : new OpenLayers.Projection("EPSG:4326")});
+          map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"),{projection : new OpenLayers.Projection("EPSG:4326")});
+          var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
+              {
+format: OpenLayers.Format.KML, 
+formatOptions: {
+extractStyles: true, 
+extractAttributes: true
+},
+projection: map.displayProjection
+});
 
-						map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),16);
-					</script> 
-					<a href='/maps/index?zoom=15&lat=<%= @node.lat %>&lon=<%= @node.lon %>'>auf Karte anzeigen</a>
-				</div>
-			  </div>
-				<% if @node.user %>	
-				  von <a href=''><%= @node.user.username %></a> 
-				  <% if @node.group %>  ( <a href=''><%= @node.group.name %></a>) <% end %>
-				  <% if @node.user.location %> <br />aus <i><%= @node.user.location.province.name + " - " + @node.user.location.name %></i><br /><% end %>
-				  <br />
-				<% end %>
-				<div id=node-desc></div>
-                                <% if @node.services && !@node.services.empty?%>
-                                  <b>Dienste</b>
-                                  <ul><% @node.services.each do |service| 
-                                    next if service.port == 138
-                                    next if service.port == 139
-                                    link = "#{service.name}://#{@node.default_ipv4}"
-                                    link = "http://#{@node.default_ipv4}:8080" if service.port == 8080
-                                    link = "smb://#{@node.default_ipv4}" if service.port == 137
-                                    name = "#{@node.name} #{service.name.upcase}"
-                                    name = "#{@node.name} SHARE" if service.port == 137
-                                  %>
-                                  <li><a href='<%= link %>'><%= name %></a></li>
+map.addLayer(kml);
+var kml2 = new OpenLayers.Layer.GML("Nodes", "/links/feed", 
+    {
+format: OpenLayers.Format.KML, 
+formatOptions: {
+extractStyles: true, 
+extractAttributes: true
+},
+projection: map.displayProjection
+});
 
-                                <% end %>
-                              </ul>
-                                <% end %>
-                                <% if @node.neighbors && !@node.neighbors.empty? %>
-                                  <b>Nachbarn</b> <br /> 
-                                  <ul><% @node.neighbors.each do |nnode| %>
-                                      <li><a href='/nodes/<%= nnode.id %>'><%= nnode.name %></a></li>
-                                    <% end %>
-                                  </ul>
-                                <% end %>
-                                  <br />
-				<div id='node-users'>     <b>Statistiken</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
-                                </div> 
-		  </div>
+map.addLayer(kml2);
+
+map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform(new OpenLayers.Projection("EPSG:4326"),map.getProjectionObject()),16);
+</script> 
+<a href='/maps/index?zoom=15&lat=<%= @node.lat %>&lon=<%= @node.lon %>'>auf Karte anzeigen</a>
+        </div>
+      </div>
+      <% if @node.user %>	
+        von <a href=''><%= @node.user.username %></a> 
+      <% if @node.group %>  ( <a href=''><%= @node.group.name %></a>) <% end %>
+      <% if @node.user.location %> <br />aus <i><%= @node.user.location.province.name + " - " + @node.user.location.name %></i><br /><% end %>
+        <br />
+      <% end %>
+      <div id=node-desc></div>
+      <% if @node.services && !@node.services.empty?%>
+        <b>Dienste</b>
+        <ul><% @node.services.each do |service| 
+          next if service.port == 138
+          next if service.port == 139
+          link = "#{service.name}://#{@node.default_ipv4}"
+          link = "http://#{@node.default_ipv4}:8080" if service.port == 8080
+          link = "smb://#{@node.default_ipv4}" if service.port == 137
+          name = "#{@node.name} #{service.name.upcase}"
+          name = "#{@node.name} SHARE" if service.port == 137
+        %>
+        <li><a href='<%= link %>'><%= name %></a></li>
+
+      <% end %>
+    </ul>
+  <% end %>
+  <% if @node.neighbors && !@node.neighbors.empty? %>
+    <b>Nachbarn</b> <br /> 
+    <ul><% @node.neighbors.each do |nnode| %>
+        <li><a href='/nodes/<%= nnode.id %>'><%= nnode.name %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <br />
+  <div id='node-users'>     <b>Statistiken</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
+</div> 
 </div>

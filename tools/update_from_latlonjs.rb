@@ -41,8 +41,12 @@ class LatLonJSUpdate
     nodeA = Node.find(:first, :select => ['id, name'], :conditions => ['default_ipv4 = ?',data[0].strip])
     nodeB = Node.find(:first, :select => ['id, name'], :conditions => ['default_ipv4 = ?',data[1].strip])
 
-    links = Link.find(:first, :conditions => ['(node1 = ? AND node2 =?) OR (node2 = ? AND node1 = ?)', 
-                      nodeA.id, nodeB.id, nodeA.id, nodeB.id])
+    if nodeA && nodeB
+      links = Link.find(:first, :conditions => ['(node1 = ? AND node2 =?) OR (node2 = ? AND node1 = ?)', 
+                        nodeA.id, nodeB.id, nodeA.id, nodeB.id])
+    else
+      return
+    end
     if links.nil?
       puts "New Link from #{nodeA.name} to #{nodeB.name}"
       link = Link.new
@@ -63,9 +67,9 @@ class LatLonJSUpdate
     data[5] = data[5].split(')')[0]
     node = Node.find(:first, :conditions => ['name = ?', data[5].strip], :order => 'last_seen DESC')
     if node.nil?
+      puts "New Node #{data[5].strip}"
       node = Node.new
     end
-    puts "Node #{node.name} updated"
     node.name = data[5].strip
     node.default_ipv4 = data[0].strip
     node.lat = data[1].strip

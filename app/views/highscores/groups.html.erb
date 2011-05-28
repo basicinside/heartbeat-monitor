@@ -1,11 +1,1 @@
-<% counter = 0
- for group in @groups 
-counter += 1%>
-<div id="node_green">
-	<div id="punkte"><%= group.score %> Punkte</div> 
-       	<div id="details"> 
-        <b><%= counter %>. <a href='/groups/<%= group.id %>'><%= group.name %></a></b> 
-	<% if group.description %><br /><i><%= group.description %></i><% end %>
-	</div> 
-</div>
-<% end %>
+<%= render "groups" %>

@@ -45,8 +45,8 @@ class GraphCreator
 	def initialize
 		Node.all.each { |node|
 			create_graph(node.id.to_s)
-			puts "Erstelle Graph fuer #{node.name}"
 		}
+		puts "Graphen erstellt"
 	end
 end
 

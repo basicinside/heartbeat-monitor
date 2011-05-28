@@ -1,5 +1,5 @@
 <div class="photo">
-<% fields_for "node[photo_attributes][]", photo do |p| %>
+<%= fields_for "node[photo_attributes][]", photo do |p| %>
   <p>
     <%= p.label :Photo %><br />
     <%= p.file_field :data, :index => nil %>

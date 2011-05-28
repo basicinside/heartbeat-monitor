@@ -1,0 +1,11 @@
+<% counter = 0
+  for province in @provinces 
+  counter += 1%>
+  <div id="node_green">
+    <div id="punkte"><%= province.score %> Punkte</div>
+    <div id="details">
+      <b><%= counter %>. <a href='/provinces/<%= province.id %>'><%= province.name %></a></b>
+    <% if province.description %><br /><i><%= province.description %></i><% end %>
+    </div>
+  </div>
+<% end %>

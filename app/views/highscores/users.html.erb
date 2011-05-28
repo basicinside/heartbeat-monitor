@@ -1,12 +1,1 @@
-<% counter = 0
- for user in @users 
-counter += 1%>
-<div id="node_green">
-	<div id="punkte"><%= user.score %> Punkte</div> 
-       	<div id="details"> 
-        <b><%= counter %>. <a href='/users/<%= user.id %>'><%= user.username %></a></b> 
-	<% if user.group %>( <a href=''><%= user.group.name %></a> )<% end %>
-        <% if user.location %><br />aus <i><%= user.location.province.name %> - <%= user.location.name %></i> <% end %>
-	</div> 
-</div>
-<% end %>
+<%= render "users" %>

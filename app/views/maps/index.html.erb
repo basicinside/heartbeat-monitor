@@ -84,12 +84,15 @@ var control =  new OpenLayers.Control.SelectFeature(kml, { displayClass: 'olCont
 p.addControls([ new OpenLayers.Control.Navigation(), m, control ]);
 p.activateControl(p.controls[2]);
 map.addControl(new OpenLayers.Control.LayerSwitcher());
+<% if params[:lat] && params[:lon] && params[:zoom] %>
+  var lon = <%= params[:lon] %>;
+  var lat = <%= params[:lat] %>;
+  var zoom = <%= params[:zoom] %>;
 
+<% else %>
 var lon = 13.32466;
 var lat = 52.51345;
 var zoom = 6;
-var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
-map.setCenter (lonLat, zoom); 
 
 if (navigator.geolocation) {
   // Use method getCurrentPosition to get coordinates
@@ -103,6 +106,10 @@ if (navigator.geolocation) {
 
       });
 }
+<% end %>
+var lonLat = new OpenLayers.LonLat(lon, lat).transform(map.displayProjection,  map.projection);
+map.setCenter (lonLat, zoom); 
+
 
 // wird beim Schließen des Popups aufgerufen
 function onPopupClose(evt) {

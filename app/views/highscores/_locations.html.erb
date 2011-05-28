@@ -1,0 +1,10 @@
+<% counter = 0
+ for location in @locations 
+counter += 1%>
+<div id="node_green">
+	<div id="punkte"><%= location.score %> Punkte</div> 
+       	<div id="details"> 
+        <b><%= counter %>. <a href='/locations/<%= location.id %>'><%= location.province.name + " - " + location.name %></a></b> 
+	</div> 
+</div>
+<% end %>

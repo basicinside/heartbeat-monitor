@@ -1,0 +1,11 @@
+<% counter = 0
+ for partie in @parties 
+counter += 1%>
+<div id="node_green">
+	<div id="punkte"><%= partie.score %> Punkte</div> 
+       	<div id="details"> 
+        <b><%= counter %>. <a href='/parties/<%= partie.id %>'><%= partie.name %></a></b> 
+	<% if partie.description %><br /><i><%= partie.description %></i><% end %>
+	</div> 
+</div>
+<% end %>

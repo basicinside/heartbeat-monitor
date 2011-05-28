@@ -1,0 +1,27 @@
+<% counter = 0 %>
+<% for node in @nodes 
+counter += 1 %>
+  <% if node.last_seen + 1.day >= Date.today 
+	color = 'green'
+     elsif node.last_seen + 7.days > Date.today 
+	color = 'yellow'
+     else
+        color = 'red'
+     end %>
+     <div id="node_<%= color %>">
+       <div id="punkte"><%= node.score_count %> Punkte</div>
+       <div id="details">
+         <b><%= counter %>. <a href='/nodes/<%= node.id %>'><%= node.name %></a></b>
+	 <% if node.user %><br />von <a href='/users/<%= node.user.id %>'><%= node.user.username %></a>
+	   <% if color == 'yellow' %>  <div id="vor">vor <%= (Date.today-node.last_seen) %> Tagen</div> <% end %>
+           <% if node.group %> ( <a href=''><%= node.group.name %></a> ) <% end %>
+           <% if node.user.location %> <br />aus <i><%= node.user.location.province.name + " - " + node.user.location.name %></i><% end %>
+	<% else %>
+	 <% if color == 'yellow' %>  <br /><div id="vor">vor <%= (Date.today-node.last_seen) %> Tagen</div><br /> <% end %>
+	 <% end %>
+	</div>
+     </div>
+ 	   
+<% end %>
+
+
