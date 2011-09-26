@@ -1,6 +1,17 @@
 HeartbeatMonitor::Application.routes.draw do
+  resources :traffic_bytes
+  resources :traffic_packets
+
+  resources :authentications
+  match '/auth/:provider/callback' => 'authentications#create'
+  devise_for :users, :controllers => {:registrations => 'registrations'}
+  devise_for :users
+
   resources :locations
-  match 'nodes/register' => 'nodes#register', :as => :register_node
+  match 'nodes/register/:id' => 'nodes#register', :as => :register_node
+  match 'nodes/register/' => 'nodes#register', :as => :register_node
+  match 'nodes/traffic_bytes' => 'nodes#traffic_bytes', :as => :traffic_bytes
+  match 'nodes/traffic_packets' => 'nodes#traffic_packets', :as => :traffic_packets
   resources :groups
   match 'login' => 'user_sessions#new', :as => :login
   match 'logout' => 'user_sessions#destroy', :as => :logout
@@ -26,6 +37,7 @@ HeartbeatMonitor::Application.routes.draw do
   resources :maps
   match '/' => 'highscores#index'
   match '/:controller(/:action(/:id))'
+  root :to => "highscores#index"
 end
 # The priority is based upon order of creation:
 # first created -> highest priority.
@@ -74,7 +86,7 @@ end
 #     resources :products
 #   end
 
-# You can have the root of your site routed with "root"
+# You can have the  of your site routed with "roo"
 # just remember to delete public/index.html.
 # root :to => "welcome#index"
 

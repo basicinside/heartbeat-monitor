@@ -3,8 +3,8 @@
 	<div id=node-name><%= @group.name %></div> <br /> 
 	<div id="details"> 
 		<div id=node-details-left>
-			<b>Benutzer</b><ul><% for user in @group.users.sort { |u1,u2| u2.score <=> u1.score } %>
-				<li><a href='/users/<%= user.id %>'><%= user.username %></a> (<%= user.score %> Punkte)</li>
+			<b>Benutzer</b><ul><% for user in @group.users.sort { |u1,u2| u2.score_count <=> u1.score_count } %>
+				<li><a href='/users/<%= user.id %>'><%= user.username %></a> (<%= user.score_count %> Punkte)</li>
 			<% end %></ul>
 		</div>
 		<br /><i><%= @group.description %></i>

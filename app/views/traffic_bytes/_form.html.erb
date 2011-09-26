@@ -1,0 +1,141 @@
+<%= form_for(@traffic_byte) do |f| %>
+  <% if @traffic_byte.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@traffic_byte.errors.count, "error") %> prohibited this traffic_byte from being saved:</h2>
+
+      <ul>
+      <% @traffic_byte.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :node %><br />
+    <%= f.text_field :node %>
+  </div>
+  <div class="field">
+    <%= f.label :input %><br />
+    <%= f.text_field :input %>
+  </div>
+  <div class="field">
+    <%= f.label :input_udp %><br />
+    <%= f.text_field :input_udp %>
+  </div>
+  <div class="field">
+    <%= f.label :input_olsr %><br />
+    <%= f.text_field :input_olsr %>
+  </div>
+  <div class="field">
+    <%= f.label :input_tcp %><br />
+    <%= f.text_field :input_tcp %>
+  </div>
+  <div class="field">
+    <%= f.label :input_ftp %><br />
+    <%= f.text_field :input_ftp %>
+  </div>
+  <div class="field">
+    <%= f.label :input_ssh %><br />
+    <%= f.text_field :input_ssh %>
+  </div>
+  <div class="field">
+    <%= f.label :input_smtp %><br />
+    <%= f.text_field :input_smtp %>
+  </div>
+  <div class="field">
+    <%= f.label :input_http %><br />
+    <%= f.text_field :input_http %>
+  </div>
+  <div class="field">
+    <%= f.label :input_https %><br />
+    <%= f.text_field :input_https %>
+  </div>
+  <div class="field">
+    <%= f.label :input_icmp %><br />
+    <%= f.text_field :input_icmp %>
+  </div>
+  <div class="field">
+    <%= f.label :forward %><br />
+    <%= f.text_field :forward %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_udp %><br />
+    <%= f.text_field :forward_udp %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_olsr %><br />
+    <%= f.text_field :forward_olsr %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_tcp %><br />
+    <%= f.text_field :forward_tcp %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_ftp %><br />
+    <%= f.text_field :forward_ftp %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_ssh %><br />
+    <%= f.text_field :forward_ssh %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_smtp %><br />
+    <%= f.text_field :forward_smtp %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_http %><br />
+    <%= f.text_field :forward_http %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_https %><br />
+    <%= f.text_field :forward_https %>
+  </div>
+  <div class="field">
+    <%= f.label :forward_icmp %><br />
+    <%= f.text_field :forward_icmp %>
+  </div>
+  <div class="field">
+    <%= f.label :output %><br />
+    <%= f.text_field :output %>
+  </div>
+  <div class="field">
+    <%= f.label :output_udp %><br />
+    <%= f.text_field :output_udp %>
+  </div>
+  <div class="field">
+    <%= f.label :output_olsr %><br />
+    <%= f.text_field :output_olsr %>
+  </div>
+  <div class="field">
+    <%= f.label :output_tcp %><br />
+    <%= f.text_field :output_tcp %>
+  </div>
+  <div class="field">
+    <%= f.label :output_ftp %><br />
+    <%= f.text_field :output_ftp %>
+  </div>
+  <div class="field">
+    <%= f.label :output_ssh %><br />
+    <%= f.text_field :output_ssh %>
+  </div>
+  <div class="field">
+    <%= f.label :output_smtp %><br />
+    <%= f.text_field :output_smtp %>
+  </div>
+  <div class="field">
+    <%= f.label :output_http %><br />
+    <%= f.text_field :output_http %>
+  </div>
+  <div class="field">
+    <%= f.label :output_https %><br />
+    <%= f.text_field :output_https %>
+  </div>
+  <div class="field">
+    <%= f.label :output_icmp %><br />
+    <%= f.text_field :output_icmp %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

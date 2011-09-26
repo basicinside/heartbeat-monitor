@@ -2,15 +2,18 @@ class Node < ActiveRecord::Base
 
   has_many :photos
   validates_presence_of :name
-  
+
   belongs_to :user
   has_one :group, :through => :user
-	has_one :party, :through => :user
-	has_one :location, :through => :user
-	has_many :heartbeats, :dependent => :destroy
-        has_many :services, :conditions => ["state = 'open' AND last_seen > ?", Date.today - 4.days]
-	has_many :scores, :dependent => :destroy
-        has_many :links, :class_name => "Link", :finder_sql => 'SELECT * FROM links WHERE (node1 = #{id} OR node2 = #{id}) AND last_seen > \'#{Date.today - 7.days}\''
+  has_one :party, :through => :user
+  has_one :location, :through => :user
+  has_many :heartbeats, :dependent => :destroy
+  has_many :services, :conditions => ["state = 'open' AND last_seen > ?", Date.today - 4.days]
+  has_many :scores, :dependent => :destroy
+  has_many :links, :class_name => "Link", :finder_sql => 'SELECT * FROM links WHERE (node1 = #{id} OR node2 = #{id}) AND last_seen > \'#{Date.today - 7.days}\''
+  #paperclip
+    has_attached_file :photo,
+         :styles => { :small  => "150x150#" }
 
   def neighbors
     neighbor_arr = []
@@ -36,14 +39,14 @@ class Node < ActiveRecord::Base
   end
 
   def score_count
-  	Score.sum('score', :conditions => ['node_id = ?', id])
+    Score.sum('score', :conditions => ['node_id = ?', id])
   end
-  
 
-def photo_attributes=(photo_attributes)
-  photo_attributes.each do |attributes|
-    photos.build(attributes)
+
+  def photo_attributes=(photo_attributes)
+    photo_attributes.each do |attributes|
+      photos.build(attributes)
+    end
   end
-end
-  
+
 end

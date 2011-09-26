@@ -1,5 +1,4 @@
 class LocationsController < ApplicationController
-	filter_access_to :all
   # GET /locations
   # GET /locations.xml
   def index

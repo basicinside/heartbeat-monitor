@@ -1,0 +1,83 @@
+<h1>Listing traffic_packets</h1>
+
+<table>
+  <tr>
+    <th>Node</th>
+    <th>Input</th>
+    <th>Input udp</th>
+    <th>Input olsr</th>
+    <th>Input tcp</th>
+    <th>Input ftp</th>
+    <th>Input ssh</th>
+    <th>Input smtp</th>
+    <th>Input http</th>
+    <th>Input https</th>
+    <th>Input icmp</th>
+    <th>Forward</th>
+    <th>Forward udp</th>
+    <th>Forward olsr</th>
+    <th>Forward tcp</th>
+    <th>Forward ftp</th>
+    <th>Forward ssh</th>
+    <th>Forward smtp</th>
+    <th>Forward http</th>
+    <th>Forward https</th>
+    <th>Forward icmp</th>
+    <th>Output</th>
+    <th>Output udp</th>
+    <th>Output olsr</th>
+    <th>Output tcp</th>
+    <th>Output ftp</th>
+    <th>Output ssh</th>
+    <th>Output smtp</th>
+    <th>Output http</th>
+    <th>Output https</th>
+    <th>Output icmp</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @traffic_packets.each do |traffic_packet| %>
+  <tr>
+    <td><%= traffic_packet.node %></td>
+    <td><%= traffic_packet.input %></td>
+    <td><%= traffic_packet.input_udp %></td>
+    <td><%= traffic_packet.input_olsr %></td>
+    <td><%= traffic_packet.input_tcp %></td>
+    <td><%= traffic_packet.input_ftp %></td>
+    <td><%= traffic_packet.input_ssh %></td>
+    <td><%= traffic_packet.input_smtp %></td>
+    <td><%= traffic_packet.input_http %></td>
+    <td><%= traffic_packet.input_https %></td>
+    <td><%= traffic_packet.input_icmp %></td>
+    <td><%= traffic_packet.forward %></td>
+    <td><%= traffic_packet.forward_udp %></td>
+    <td><%= traffic_packet.forward_olsr %></td>
+    <td><%= traffic_packet.forward_tcp %></td>
+    <td><%= traffic_packet.forward_ftp %></td>
+    <td><%= traffic_packet.forward_ssh %></td>
+    <td><%= traffic_packet.forward_smtp %></td>
+    <td><%= traffic_packet.forward_http %></td>
+    <td><%= traffic_packet.forward_https %></td>
+    <td><%= traffic_packet.forward_icmp %></td>
+    <td><%= traffic_packet.output %></td>
+    <td><%= traffic_packet.output_udp %></td>
+    <td><%= traffic_packet.output_olsr %></td>
+    <td><%= traffic_packet.output_tcp %></td>
+    <td><%= traffic_packet.output_ftp %></td>
+    <td><%= traffic_packet.output_ssh %></td>
+    <td><%= traffic_packet.output_smtp %></td>
+    <td><%= traffic_packet.output_http %></td>
+    <td><%= traffic_packet.output_https %></td>
+    <td><%= traffic_packet.output_icmp %></td>
+    <td><%= link_to 'Show', traffic_packet %></td>
+    <td><%= link_to 'Edit', edit_traffic_packet_path(traffic_packet) %></td>
+    <td><%= link_to 'Destroy', traffic_packet, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Traffic packet', new_traffic_packet_path %>

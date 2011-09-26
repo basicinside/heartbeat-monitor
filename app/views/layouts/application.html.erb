@@ -29,120 +29,138 @@
           $(".example2").accessibleTabs({fx:"show",fxspeed: '', syncheights: false, tabbody:'.tab-content'});
           $(".example1").accessibleTabs({fx:"show",fxspeed: '', syncheights: true, tabbody:'.tab-content'});
           });
-    </script>
+        </script>
 
-  </head>
+      </head>
 
-  <body>
+      <body>
 
-    <!-- skip link navigation -->
-    <ul id="skiplinks">
-      <li><a class="skip" href="#nav">Skip to navigation (Press Enter).</a></li>
-      <li><a class="skip" href="#main" >Skip to main content (Press Enter).</a></li>
-    </ul>
+        <!-- skip link navigation -->
+        <ul id="skiplinks">
+          <li><a class="skip" href="#nav">Skip to navigation (Press Enter).</a></li>
+          <li><a class="skip" href="#main" >Skip to main content (Press Enter).</a></li>
+        </ul>
 
-    <div id="topnav" role="contentinfo">
-      <div class="page_margins">
-        <div class="page">
-          <span class="navlinks">
-            <!--  <a href="#">Login</a> | <a href="#">Kontakt</a> | <a href="#">Impressum</a> -->
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div id="nav" role="navigation">
-      <div class="page_margins">
-        <div class="page">
-          <div class="hlist">
-
-            <!-- main navigation: #nav_main -->
-            <ul>
-              <li><a href="/">Index<span>Alle Geraete</span></a>            </li>
-              <li><a href="/karte">Karte<span>alle Standorte</span></a></li>
-              <li><a href="https://firmware.pberg.freifunk.net/backfire/10.03">Firmware<span>das Image</span></a></li>
-              <li><a href="https://wiki.freifunk.net">Freifunk Wiki<span>Wissensdatenbank</span></a></li>
-              <li><a href="https://pberg.freifunk.net">Kiezfunk<span>Freifunk Prenzlauer Berg</span></a></li>
-
-            </ul>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="header" role="banner">
-      <div class="page_margins">
-        <div class="page">
-          <h1>heartbeat monitor</h1>
-          <span>am Herzschlag des Freifunks</span>
-        </div>
-      </div>
-    </div>
-
-    <div id="main">
-
-      <div class="page_margins">
-        <div class="page">
-          <div class="subcolumns">
-            <div class="c60l">
-              <div class="subcl">
-                <%= yield %>
-              </div>
-            </div>
-            <div class="c25r">
-              <div class="subc">
-                <!-- Insert your subtemplate content here -->
-                <div class="info">
-                  <h3>heartbeat monitor</h3>
-                  <p>Der <i>heartbeat monitor</i> empfaengt taeglich die Anzahl der Benutzer und Nachbargeraete von Freifunk-Routern. Jedes Geraet erhaelt dafuer Punkte.</p>
-                  <ul>
-                    <li>5 Punkte pro Rueckmeldung</li>
-                    <li>2 Punkte pro Nachbar</li>
-                    <li>1 Punkt pro Benutzer</li>
-                  </ul>
-                  <p>Du benoetigst das <i>heartbeat</i> OpenWRT Paket auf deinem Router, um teilzunehmen.</p>
-                  <p>Er muss nur im Freifunkassistenten deines Routers aktiviert werden.</p>
-                </div>
-              </div>
-
-              <div class="subc">
-                <div class="info">
-                  <h3>Statisktiken</h3>
-                  <p>Gesehene Geraete: <%= Node.count(:all, :conditions => ["last_seen > ?", Date.today-7.days]) %><br />
-                  Gesehene Verbindungen: <%= Link.count(:all, :conditions => ["last_seen > ?", Date.today-7.days]) %></p>
-                </div>
-              </div>
-
-              <div class="subc">
-                <div class="info">
-                  <h3>Aehnliche Projekte</h3>
-                  <ul>
-                    <li> <a href='http://layereight.de/software.php'>freifunk-map</a></li>
-                    <li> <a href='http://wurststulle.dyndns.org/yaffmap/trac'>yaffmap</a></li>
-                    <li> <a href='http://wiki.freifunk-ol.de/index.php?title=Netmon'>netmon</a></li>
-                  </ul>
-                </div>
-              </div>
-
+        <div id="topnav" role="contentinfo">
+          <div class="page_margins">
+            <div class="page">
+              <span class="navlinks">
+                <% if user_signed_in? %>
+                  Angemeldet als <%= current_user.username %>. 
+                  | <a href="/users/edit">Bearbeiten</a> 
+                  | <%= link_to "Abmelden", destroy_user_session_path %>
+                <% else %>
+                  <%= link_to "Anmelden", 'https://heartbeat.basicinside.de' + authentications_path %>
+                <% end %>
+              </span>
             </div>
           </div>
         </div>
-      </div>
+
+        <div id="nav" role="navigation">
+          <div class="page_margins">
+            <div class="page">
+              <div class="hlist">
+                <ul>
+                  <li><a href="/">&Uuml;bersicht<span>die Ranglisten</span></a>            </li>
+                  <li><a href="/karte">Karte<span>alle Standorte</span></a></li>
+                  <li><a href="https://wiki.freifunk.net">Freifunk Wiki<span>Wissensdatenbank</span></a></li>
+                  <li><a href="https://pberg.freifunk.net">Kiezfunk<span>Freifunk Prenzlauer Berg</span></a></li>
 
 
-      <!-- begin: #footer -->
-      <div id="footer" role="contentinfo">
-        <div class="page_margins">
-          <div class="page">
-            <p>Dieser Dienst wird gehostet von den <a href='http://www.kiezfunk.net'>Kiezfunkern</a> auf <a href='https://pberg.freifunk.net/moin'>pberg.freifunk.net</a>. 
-            Er wird betrieben von Robin Kuck (<i>robin # basicinside # de</i>).<br />
-            Layout based on <a href="http://www.yaml.de/">YAML</a></p>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- full skiplink functionality in webkit browsers -->
-      <script src="../../yaml/core/js/yaml-focusfix.js" type="text/javascript"></script>
-    </body>
-  </html>
+        <div id="header" role="banner">
+          <div class="page_margins">
+            <div class="page">
+              <h1>heartbeat monitor</h1>
+              <span>am Herzschlag des Freifunks</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="main">
+          <div class="page_margins">
+            <div class="page">
+              <div class="subcolumns">
+                <div class="c60l">
+                  <div class="subcl">
+                    <% if flash[:notice] %>
+                      <p class="note"><%= flash[:notice] %></p>
+                    <% end %>
+                    <% if flash[:error] %>
+                      <p class="warning"><%= flash[:error] %></p>
+                    <% end %>
+                    <%= yield %>
+                  </div>
+                </div>
+                <div class="c25r">
+                  <div class="subc">
+                    <div class="info">
+                      <h3>heartbeat monitor</h3>
+                      <p>Der <i>heartbeat monitor</i> empf&auml;ngt t&auml;glich die Anzahl der Benutzer und Nachbarger&auml;te von Freifunk-Routern. Jedes Ger&auml;t erhaelt daf&uuml;r Punkte.</p>
+                      <ul>
+                        <li>5 Punkte pro R&uuml;ckmeldung</li>
+                        <li>2 Punkte pro Nachbar</li>
+                        <li>1 Punkt pro Benutzer</li>
+                      </ul>
+                      <p>Du ben&ouml;tigst das <i>heartbeat</i> OpenWRT Paket auf deinem Router, um teilzunehmen.</p>
+                      <p>Er muss nur im Freifunkassistenten deines Routers aktiviert werden.</p>
+                    </div>
+                  </div>
+
+
+                  <div class="subc">
+                    <div class="info">
+                      <h3>Freifunk Firmware</h3>
+                      <p>Lade die aktuelle Firmware deiner Wahl herunter:</p>
+                      <ul>
+                        <li><a href="http://firmware.pberg.freifunk.net/backfire/">Freifunk Firmware</a></li>
+                        <li><a href="http://piraten-firmware.pberg.freifunk.net/backfire/">Piraten Firmware</a></li>
+                        <li>                  <a href="http://firmware.pberg.freifunk.net/experimental/backfire/">Experimental Firmware</a></li>
+                      </ul>
+                      <p>und folge der <a href="https://pberg.freifunk.net/moin/flashen">Anleitung</a> um die Firmware auf deinen
+                      Router zu installieren</p>
+                    </div>
+                  </div>
+                  <div class="subc">
+                    <div class="info">
+                      <h3>Statisktiken</h3>
+                      <p>Gesehene Ger&auml;te: <%= Node.count(:all, :conditions => ["last_seen > ?", Date.today-7.days]) %><br />
+                      Gesehene Verbindungen: <%= Link.count(:all, :conditions => ["last_seen > ?", Date.today-7.days]) %></p>
+                    </div>
+                  </div>
+
+                  <div class="subc">
+                    <div class="info">
+                      <h3>Aehnliche Projekte</h3>
+                      <ul>
+                        <li> <a href='http://layereight.de/software.php'>freifunk-map</a></li>
+                        <li> <a href='http://wurststulle.dyndns.org/yaffmap/trac'>yaffmap</a></li>
+                        <li> <a href='http://wiki.freifunk-ol.de/index.php?title=Netmon'>netmon</a></li>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="footer" role="contentinfo">
+            <div class="page_margins">
+              <div class="page">
+                <p>Dieser Dienst wird gehostet von den <a href='http://www.kiezfunk.net'>Kiezfunkern</a> auf <a href='https://pberg.freifunk.net/moin'>pberg.freifunk.net</a>. 
+                Er wird betrieben von Robin Kuck (<i>robin # basicinside # de</i>).<br />
+                Layout based on <a href="http://www.yaml.de/">YAML</a></p>
+              </div>
+            </div>
+          </div>
+
+          <script src="/stylesheets/yaml/core/js/yaml-focusfix.js" type="text/javascript"></script>
+        </body>
+      </html>

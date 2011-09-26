@@ -1,24 +1,23 @@
-<div id="page">
-	Die Geräte ID wird automatisch vom <i>Heartbeat Paket</i> auf dem Router erstellt. Um deinen Router mit deinem Benutzer zu verknüpfen, füge sie in das unten stehende Formular ein. Um einen Router zu registrieren, muss er bereits einen Heartbeat zum Server gesendet haben.
-	<br />
-	<br />
-	<fieldset>
-		<form>
-			<b>Geräte ID</b>
-			<br />
-			<input type='text' name='node_id' id='node_id' size='30' />
-			<input type='submit' value='Hinzufügen' />
-		</form>
-	</fieldset>
+<div class="info">
+  <b>Ger&auml;e ID von Webinterface abfragen</b><br />
+  Logge dich in die Administration deines Ger&auml;ts ein. W&auml;le das Heartbeat Men&uuml;aus. Dort findest du im unteren Abschnitt die Ger&auml;e ID.
+  <br />
+  <br />
+  <b>Ger&auml;e ID per Console abfragen</b><br />
+  <pre>
+  ssh root@DEINE_ROUTER_IP uci get system.@system[0].nodeid
+  </pre>
+  </div>
+<h3>Ein Ger&auml;t verkn&uuml;pfen</h3>
+Die Ger&auml;te ID wird automatisch vom <i>Heartbeat Paket</i> auf dem Router erstellt. Um deinen Router mit deinem Benutzer zu verkn&uuml;pfen, f&uuml;ge sie in das unten stehende Feld ein. Um einen Router zu registrieren, muss er bereits einen Heartbeat zum Server gesendet haben.
+<br />
+<br />
 
-	<br />
+<form>
+  <b>Ger&auml;te ID</b>
+  <br />
+  <input type='text' name='node_id' id='node_id' size='30' />
+  <input type='submit' value='Verkn&uuml;pfen' />
+</form>
 
-	<h2>Geräte ID von Webinterface abfragen</h2>
-	Logge dich in die Administration deines Routers ein. Wähle das Heartbeat Menü aus. Dort findest du im unteren Abschnitt die Geräte ID.
-	<br />
-	<br />
-	<h2>Geräte ID manuell abfragen</h2>
-	<pre>
-	ssh root@DEINE_ROUTER_IP uci get system.@system[0].nodeid
-	</pre>
-</div>
+<br />

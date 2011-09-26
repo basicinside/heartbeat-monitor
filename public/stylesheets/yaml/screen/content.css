@@ -133,6 +133,7 @@ a:active { color:#376; text-decoration:underline; outline: 0 none; }
 
 #node_green  { padding: 5px; background: #dfd; border-bottom:1px dashed #ddd}
 #node_yellow { padding: 5px; background: #ffd; border-bottom:1px dashed #ddd}
+#node_red { padding: 5px; background: #fdd; border-bottom:1px dashed #ddd}
 
 #punkte, #vor, #node-details-left { float: right; }
 #map { background-color: #ddd; border: 1px solid gray; width:200px; height:200px; }

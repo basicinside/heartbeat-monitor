@@ -1,6 +1,6 @@
 <div class="jquery_tabs example2">
 
-  <h3>Geraete</h3>
+  <h3>Ger&auml;te</h3>
   <div class="tab-content">
     <%= render "nodes" %>
   </div>
@@ -16,12 +16,14 @@
   <div class="tab-content">
     <%= render "locations" %>
   </div>
-  <h3>Bundeslaendern</h3>
-  <div class="tab-content">
-    <%= render "provinces" %>
-  </div>
   <h3>Parteien</h3>
   <div class="tab-content">
     <%= render "parties" %>
   </div>
+  <% if current_user %>
+    <h3>Meine</h3>
+    <div class="tab-content">
+      <%= render "owned" %>
+    </div>
+  <% end %>
 </div>

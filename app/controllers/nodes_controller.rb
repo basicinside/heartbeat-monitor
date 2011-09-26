@@ -1,9 +1,20 @@
 class NodesController < ApplicationController
   require 'open-uri'
   require 'digest/md5'
-  filter_access_to :all
 
-  # GET /nodes
+  def update
+    @node = Node.find(params[:id])
+
+    if current_user && current_user.id == @node.user_id && @node.update_attributes(params[:node])
+      flash[:notice] = "Bild erfolgreich hochgeladen."
+    else
+      flash[:warning] = "Bild konnte nicht hochgeladen werden."
+    end
+  end
+
+
+
+  # GET / edes
   # return nodes ordered by scores
   # where last_seen < 7 days
   def index
@@ -22,35 +33,33 @@ class NodesController < ApplicationController
 
   # register an existing node to user
   def register
-    if params[:node_id]
-      redirect_to "/nodes/register/#{params[:node_id]}"
-      return
+    #render :text => request.path
+    if params[:node_id] 
+      params[:id] = params[:node_id]      
     end
-    if params[:id] 
+    if params[:id]
       if !current_user
         flash[:notice] = 'Bitte logge dich ein, um ein Gerät zu registrieren.'
-        redirect_to root_url
+        #redirect_to root_url
+        return
       end
       if node = Node.find(:first, :conditions => ["node_id = ?", params[:id]])
         if node.user && node.user != current_user
-          flash[:notice] = "Das Gerät ist bereits von 
-          <a href='/users/show/#{node.user.id}'>#{node.user.username}</a> registriert. 
+          flash[:notice] = "Das Gerät ist bereits von  #{node.user.username} registriert. 
           Bitte wende dich an den Administrator."
-          redirect_to node
+          #redirect_to node
+          return false
         else
-          flash[:notice] = "Das Gerät ist nun registriert auf 
-          <a href='/users/show/#{current_user.id}'>#{current_user.username}</a>."
+          flash[:notice] = "Das Gerät ist nun registriert auf  #{current_user.username}."
           node.user = current_user
           node.save
-          redirect_to node
+          #redirect_to '/nodes/' + node.id.to_s
+          return false
         end
       else
         flash[:notice] = "Das Gerät wurde nicht gefunden."
-        redirect_to '/nodes/register'
-      end
-    else
-      respond_to do |format|
-        format.html
+        #redirect_to '/nodes/register'
+        return false
       end
     end
   end
@@ -74,6 +83,185 @@ class NodesController < ApplicationController
       format.html
     end
   end
+
+  def traffic_bytes6
+    node = Node.find_by_node_id(params[:node_id]) if params[:node_id]
+
+    if node
+      tb = TrafficByteIpv6.new()
+      tb.node_id = node.id
+
+      tb.input      = params[:i].to_i
+      tb.input_udp  = params[:iu].to_i
+      tb.input_olsr = params[:io].to_i
+      tb.input_tcp  = params[:it].to_i
+      tb.input_ftp  = params[:if].to_i
+      tb.input_ssh  = params[:is].to_i
+      tb.input_smtp = params[:im].to_i
+      tb.input_http = params[:ih].to_i
+      tb.input_https= params[:iw].to_i
+      tb.input_icmp= params[:ic].to_i
+
+      tb.forward      = params[:f].to_i
+      tb.forward_udp  = params[:fu].to_i
+      tb.forward_olsr = params[:fo].to_i
+      tb.forward_tcp  = params[:ft].to_i
+      tb.forward_ftp  = params[:ff].to_i
+      tb.forward_ssh  = params[:fs].to_i
+      tb.forward_smtp = params[:fm].to_i
+      tb.forward_http = params[:fh].to_i
+      tb.forward_https= params[:fw].to_i
+      tb.forward_icmp = params[:fc].to_i
+
+      tb.output      = params[:o].to_i
+      tb.output_udp  = params[:ou].to_i
+      tb.output_olsr = params[:oo].to_i
+      tb.output_tcp  = params[:ot].to_i
+      tb.output_ftp  = params[:of].to_i
+      tb.output_ssh  = params[:os].to_i
+      tb.output_smtp = params[:om].to_i
+      tb.output_http = params[:oh].to_i
+      tb.output_https= params[:ow].to_i
+      tb.output_icmp = params[:oc].to_i
+      tb.save
+      render :text => "Ok" and return
+    end
+    render :text => "Failed"
+  end
+
+  def traffic_packets6
+    node = Node.find_by_node_id(params[:node_id]) if params[:node_id]
+
+    if node
+      tp = TrafficPacketIpv6.new()
+      tp.node_id = node.id
+
+      tp.input      = params[:i].to_i
+      tp.input_udp  = params[:iu].to_i
+      tp.input_olsr = params[:io].to_i
+      tp.input_tcp  = params[:it].to_i
+      tp.input_ftp  = params[:if].to_i
+      tp.input_ssh  = params[:is].to_i
+      tp.input_smtp = params[:im].to_i
+      tp.input_http = params[:ih].to_i
+      tp.input_icmp= params[:ic].to_i
+
+      tp.forward      = params[:f].to_i
+      tp.forward_udp  = params[:fu].to_i
+      tp.forward_olsr = params[:fo].to_i
+      tp.forward_tcp  = params[:ft].to_i
+      tp.forward_ftp  = params[:ff].to_i
+      tp.forward_ssh  = params[:fs].to_i
+      tp.forward_smtp = params[:fm].to_i
+      tp.forward_http = params[:fh].to_i
+      tp.forward_https= params[:fw].to_i
+      tp.forward_icmp = params[:fc].to_i
+
+      tp.output      = params[:o].to_i
+      tp.output_udp  = params[:ou].to_i
+      tp.output_olsr = params[:oo].to_i
+      tp.output_tcp  = params[:ot].to_i
+      tp.output_ftp  = params[:of].to_i
+      tp.output_ssh  = params[:os].to_i
+      tp.output_smtp = params[:om].to_i
+      tp.output_http = params[:oh].to_i
+      tp.output_https= params[:ow].to_i
+      tp.output_icmp = params[:oc].to_i
+      tp.save
+      render :text => "Ok" and return
+    end
+    render :text => "Failed"
+  end
+
+  def traffic_bytes
+    node = Node.find_by_node_id(params[:node_id]) if params[:node_id]
+
+    if node
+      tb = TrafficByteIpv4.new()
+      tb.node_id = node.id
+
+      tb.input      = params[:i].to_i
+      tb.input_udp  = params[:iu].to_i
+      tb.input_olsr = params[:io].to_i
+      tb.input_tcp  = params[:it].to_i
+      tb.input_ftp  = params[:if].to_i
+      tb.input_ssh  = params[:is].to_i
+      tb.input_smtp = params[:im].to_i
+      tb.input_http = params[:ih].to_i
+      tb.input_https= params[:iw].to_i
+      tb.input_icmp= params[:ic].to_i
+
+      tb.forward      = params[:f].to_i
+      tb.forward_udp  = params[:fu].to_i
+      tb.forward_olsr = params[:fo].to_i
+      tb.forward_tcp  = params[:ft].to_i
+      tb.forward_ftp  = params[:ff].to_i
+      tb.forward_ssh  = params[:fs].to_i
+      tb.forward_smtp = params[:fm].to_i
+      tb.forward_http = params[:fh].to_i
+      tb.forward_https= params[:fw].to_i
+      tb.forward_icmp = params[:fc].to_i
+
+      tb.output      = params[:o].to_i
+      tb.output_udp  = params[:ou].to_i
+      tb.output_olsr = params[:oo].to_i
+      tb.output_tcp  = params[:ot].to_i
+      tb.output_ftp  = params[:of].to_i
+      tb.output_ssh  = params[:os].to_i
+      tb.output_smtp = params[:om].to_i
+      tb.output_http = params[:oh].to_i
+      tb.output_https= params[:ow].to_i
+      tb.output_icmp = params[:oc].to_i
+      tb.save
+      render :text => "Ok" and return
+    end
+    render :text => "Failed"
+  end
+
+  def traffic_packets
+    node = Node.find_by_node_id(params[:node_id]) if params[:node_id]
+
+    if node
+      tp = TrafficPacketIpv4.new()
+      tp.node_id = node.id
+
+      tp.input      = params[:i].to_i
+      tp.input_udp  = params[:iu].to_i
+      tp.input_olsr = params[:io].to_i
+      tp.input_tcp  = params[:it].to_i
+      tp.input_ftp  = params[:if].to_i
+      tp.input_ssh  = params[:is].to_i
+      tp.input_smtp = params[:im].to_i
+      tp.input_http = params[:ih].to_i
+      tp.input_icmp= params[:ic].to_i
+
+      tp.forward      = params[:f].to_i
+      tp.forward_udp  = params[:fu].to_i
+      tp.forward_olsr = params[:fo].to_i
+      tp.forward_tcp  = params[:ft].to_i
+      tp.forward_ftp  = params[:ff].to_i
+      tp.forward_ssh  = params[:fs].to_i
+      tp.forward_smtp = params[:fm].to_i
+      tp.forward_http = params[:fh].to_i
+      tp.forward_https= params[:fw].to_i
+      tp.forward_icmp = params[:fc].to_i
+
+      tp.output      = params[:o].to_i
+      tp.output_udp  = params[:ou].to_i
+      tp.output_olsr = params[:oo].to_i
+      tp.output_tcp  = params[:ot].to_i
+      tp.output_ftp  = params[:of].to_i
+      tp.output_ssh  = params[:os].to_i
+      tp.output_smtp = params[:om].to_i
+      tp.output_http = params[:oh].to_i
+      tp.output_https= params[:ow].to_i
+      tp.output_icmp = params[:oc].to_i
+      tp.save
+      render :text => "Ok" and return
+    end
+    render :text => "Failed"
+  end
+
 
   #function triggered by heartbeat script (node side)
   def status
@@ -129,15 +317,9 @@ class NodesController < ApplicationController
 
     end
 
-    respond_to do |format|
       if node.save
-        flash[:notice] = 'Node was successfully created.'
-        format.html { redirect_to :action => "index" }
-        format.xml  { render :xml => node, :status => :created, :location => node }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => node.errors, :status => :unprocessable_entity }
+        render :text => 'Ok'
       end
-    end
+
   end
 end

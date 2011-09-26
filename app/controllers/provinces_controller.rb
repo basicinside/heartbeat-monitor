@@ -1,5 +1,4 @@
 class ProvincesController < ApplicationController
-	filter_access_to :all
   # GET /landesverbands
   # GET /landesverbands.xml
   def index

@@ -1,0 +1,83 @@
+<h1>Listing traffic_bytes</h1>
+
+<table>
+  <tr>
+    <th>Node</th>
+    <th>Input</th>
+    <th>Input udp</th>
+    <th>Input olsr</th>
+    <th>Input tcp</th>
+    <th>Input ftp</th>
+    <th>Input ssh</th>
+    <th>Input smtp</th>
+    <th>Input http</th>
+    <th>Input https</th>
+    <th>Input icmp</th>
+    <th>Forward</th>
+    <th>Forward udp</th>
+    <th>Forward olsr</th>
+    <th>Forward tcp</th>
+    <th>Forward ftp</th>
+    <th>Forward ssh</th>
+    <th>Forward smtp</th>
+    <th>Forward http</th>
+    <th>Forward https</th>
+    <th>Forward icmp</th>
+    <th>Output</th>
+    <th>Output udp</th>
+    <th>Output olsr</th>
+    <th>Output tcp</th>
+    <th>Output ftp</th>
+    <th>Output ssh</th>
+    <th>Output smtp</th>
+    <th>Output http</th>
+    <th>Output https</th>
+    <th>Output icmp</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @traffic_bytes.each do |traffic_byte| %>
+  <tr>
+    <td><%= traffic_byte.node %></td>
+    <td><%= traffic_byte.input %></td>
+    <td><%= traffic_byte.input_udp %></td>
+    <td><%= traffic_byte.input_olsr %></td>
+    <td><%= traffic_byte.input_tcp %></td>
+    <td><%= traffic_byte.input_ftp %></td>
+    <td><%= traffic_byte.input_ssh %></td>
+    <td><%= traffic_byte.input_smtp %></td>
+    <td><%= traffic_byte.input_http %></td>
+    <td><%= traffic_byte.input_https %></td>
+    <td><%= traffic_byte.input_icmp %></td>
+    <td><%= traffic_byte.forward %></td>
+    <td><%= traffic_byte.forward_udp %></td>
+    <td><%= traffic_byte.forward_olsr %></td>
+    <td><%= traffic_byte.forward_tcp %></td>
+    <td><%= traffic_byte.forward_ftp %></td>
+    <td><%= traffic_byte.forward_ssh %></td>
+    <td><%= traffic_byte.forward_smtp %></td>
+    <td><%= traffic_byte.forward_http %></td>
+    <td><%= traffic_byte.forward_https %></td>
+    <td><%= traffic_byte.forward_icmp %></td>
+    <td><%= traffic_byte.output %></td>
+    <td><%= traffic_byte.output_udp %></td>
+    <td><%= traffic_byte.output_olsr %></td>
+    <td><%= traffic_byte.output_tcp %></td>
+    <td><%= traffic_byte.output_ftp %></td>
+    <td><%= traffic_byte.output_ssh %></td>
+    <td><%= traffic_byte.output_smtp %></td>
+    <td><%= traffic_byte.output_http %></td>
+    <td><%= traffic_byte.output_https %></td>
+    <td><%= traffic_byte.output_icmp %></td>
+    <td><%= link_to 'Show', traffic_byte %></td>
+    <td><%= link_to 'Edit', edit_traffic_byte_path(traffic_byte) %></td>
+    <td><%= link_to 'Destroy', traffic_byte, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Traffic byte', new_traffic_byte_path %>

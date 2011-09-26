@@ -1,24 +1,39 @@
-<%= javascript_include_tag 'prototype' %>  <%= map_layers_includes %>
+<%= javascript_include_tag 'prototype' %>  
 
-
-
-<div id=node_green>	
-  <div id='punkte'><%= @node.score_count %> Punkte</div>
-  <div id=node-name><%= @node.name %></div> <br />
-  <div id="details"> 
-    <div id=node-details-left>	
-      <div id='photo'><img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' /></div><br />
-      <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
-        <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
-    <% if @node.version %><div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br /><% end %>
-      <div id='node-position'>  <b>Umgebung:</b> <br />
-        <div id="map"> </div>
-        <script defer="defer" type="text/javascript"> 
-          var map;
-          map = new OpenLayers.Map('map', {theme : false,displayProjection : new OpenLayers.Projection("EPSG:4326"),projection : new OpenLayers.Projection("EPSG:4326")});
-          map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"),{projection : new OpenLayers.Projection("EPSG:4326")});
-          var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
-              {
+<script src="http://www.openlayers.org/api/OpenLayers.js"></script> 
+<script src="http://www.openstreetmap.org/openlayers/OpenStreetMap.js"></script> 
+<div>
+  <h3><%= @node.name %></h3>
+  <div> 
+    <div id=node_green>	
+      <div id="details"> 
+        <div id=node-details-left>	
+          <div id='punkte'><%= @node.score_count %> Punkte</div>
+          <br />
+          <div id='photo'>
+            <% if @node.photo.exists? then %>
+              <%= image_tag @node.photo.url(:small) %>
+            <% else %>
+              <img src='http://heartbeat.basicinside.de/images/flag.png' width='150px' />
+            <% end %>
+            <% if current_user && current_user.id == @node.user_id %>
+              <br />
+              <%= form_for @node  , :html => { :multipart => true } do |f| %>
+                <p>
+                <%= f.file_field :photo %>
+                <br />
+                <%= f.submit "Hochladen" %>
+                </p>
+              <% end %>
+            <% end %>
+          <div id='node-position'>  <b>Umgebung:</b> <br />
+            <div id="map"> </div>
+            <script defer="defer" type="text/javascript"> 
+              var map;
+              map = new OpenLayers.Map('map', {theme : false,displayProjection : new OpenLayers.Projection("EPSG:4326"),projection : new OpenLayers.Projection("EPSG:4326")});
+              map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"),{projection : new OpenLayers.Projection("EPSG:4326")});
+              var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
+                  {
 format: OpenLayers.Format.KML, 
 formatOptions: {
 extractStyles: true, 
@@ -44,6 +59,10 @@ map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform
 </script> 
 <a href='/maps/index?zoom=15&lat=<%= @node.lat %>&lon=<%= @node.lon %>'>auf Karte anzeigen</a>
         </div>
+          </div><br />
+          <div id="node-ip"><% if @node.default_ipv4 %> <b>Freifunk IP</b>
+            <br /><a href='http://<%= @node.default_ipv4 %>'><%= @node.default_ipv4 %></a><br /><% end %> </div>
+        <% if @node.version %><div id='node-version'>   <b>Version</b> <br /> <%= @node.version %></div><br /><% end %>
       </div>
       <% if @node.user %>	
         von <a href=''><%= @node.user.username %></a> 
@@ -76,6 +95,30 @@ map.setCenter(new OpenLayers.LonLat(<%= @node.lon %>,<%= @node.lat %>).transform
     </ul>
   <% end %>
   <br />
-  <div id='node-users'>     <b>Statistiken</b> <br /> <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  </div> 
+   <script src="/javascripts/lib/jquery-1.4.2.js" type="text/javascript"></script>
+       <script src="/javascripts/lib/jquery.tabs.js" type="text/javascript"></script>
+           <script src="/javascripts/lib/jquery.syncheight.js" type="text/javascript"></script>
+
+  <div class="jquery_tabs example1">
+
+    <h3>Benutzer</h3>
+    <div class="tab-content"> 
+      <img src="http://heartbeat.basicinside.de/clients/<%= @node.id %>.png" />  
+    </div> 
+    <h3>Nachbarn</h3> 
+    <div class="tab-content"> 
+      <img src="http://heartbeat.basicinside.de/neighbors/<%= @node.id %>.png" />  
+    </div> 
+    <h3>Datenverkehr (Bytes)</h3> 
+    <div class="tab-content"> 
+      <img src="http://heartbeat.basicinside.de/traffic/byte/<%= @node.id %>.png" />  
+    </div> 
+    <h3>Datenverkehr (Pakete)</h3> 
+    <div class="tab-content"> 
+      <img src="http://heartbeat.basicinside.de/traffic/packet/<%= @node.id %>.png" />  
+    </div> 
+  </div>
 </div> 
+</div>
+</div>
 </div>

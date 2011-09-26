@@ -1,0 +1,23 @@
+<% counter = 0 %>
+<% if @owned.nil? || @owned.empty? %>
+  Du hast bisher keine Ger&auml;te mit deinem Benutzer verkn&uuml;pft.
+<% end %>
+<% for node in @owned 
+counter += 1 %>
+<% if node.last_seen + 1.day >= Date.today 
+color = 'green'
+     elsif node.last_seen + 7.days > Date.today 
+       color = 'yellow'
+     else
+       color = 'red'
+     end %>
+     <div id="node_<%= color %>">
+       <div id="punkte"><%= node.score %> Punkte</div>
+       <div id="details">
+         <b><%= counter %>. <a href='/nodes/<%= node.id %>'><%= node.name %></a></b>
+         <br /><i>NodeID: <%= node.node_id %></a></i>
+       <% if color != 'green' %> <div id="vor">vor <%= (Date.today-node.last_seen) %> Tagen</div> <br /> <% end %>
+       </div>
+     </div>
+   <% end %>
+   <div class="info"><a href='/nodes/register'>Ein Ger&auml;t mit meinen Account verkn&uuml;pfen.</a></div>

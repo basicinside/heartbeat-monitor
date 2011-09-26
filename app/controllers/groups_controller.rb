@@ -1,5 +1,4 @@
 class GroupsController < ApplicationController
-	filter_access_to :all
   # GET /groups
   # GET /groups.xml
   def index

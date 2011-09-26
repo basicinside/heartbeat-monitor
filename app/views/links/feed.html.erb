@@ -18,7 +18,8 @@
       </PolyStyle>
     </Style>
     <% } %>
-    <% @links.each { |link| %>
+    <% @links.each { |link| 
+    if link.from_node && link.to_node %>
     <Placemark>
     <name><%= link.from_node.name %> to <%= link.to_node.name %></name>
     <styleUrl>#<%= link.color %></styleUrl>
@@ -28,6 +29,6 @@
       </coordinates>
       </LineString>
     </Placemark>
-    <% } %>
+    <% end } %>
   </Document>
 </kml>
