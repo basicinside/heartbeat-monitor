@@ -1,0 +1,67 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  node: 
+  input: 
+  input_udp: 
+  input_olsr: 
+  input_tcp: 
+  input_ftp: 
+  input_ssh: 
+  input_smtp: 
+  input_http: 
+  input_https: 
+  input_icmp: 
+  forward: 
+  forward_udp: 
+  forward_olsr: 
+  forward_tcp: 
+  forward_ftp: 
+  forward_ssh: 
+  forward_smtp: 
+  forward_http: 
+  forward_https: 
+  forward_icmp: 
+  output: 
+  output_udp: 
+  output_olsr: 
+  output_tcp: 
+  output_ftp: 
+  output_ssh: 
+  output_smtp: 
+  output_http: 
+  output_https: 
+  output_icmp: 
+
+two:
+  node: 
+  input: 
+  input_udp: 
+  input_olsr: 
+  input_tcp: 
+  input_ftp: 
+  input_ssh: 
+  input_smtp: 
+  input_http: 
+  input_https: 
+  input_icmp: 
+  forward: 
+  forward_udp: 
+  forward_olsr: 
+  forward_tcp: 
+  forward_ftp: 
+  forward_ssh: 
+  forward_smtp: 
+  forward_http: 
+  forward_https: 
+  forward_icmp: 
+  output: 
+  output_udp: 
+  output_olsr: 
+  output_tcp: 
+  output_ftp: 
+  output_ssh: 
+  output_smtp: 
+  output_http: 
+  output_https: 
+  output_icmp: 

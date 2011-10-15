@@ -1,0 +1,37 @@
+<h2> H&auml;ufig gestellte Fragen </h2>
+
+
+<h3>Meine Frage steht hier nicht...</h3>
+Schreibe mir einfach eine Mail. Du findest die Kontaktdaten am unteren Rand der Seiten. Alternativ
+kannst du mir auch unter <a href='https://twitter.com/#!/basicinside'>@basicinside</a> twittern.
+<br /><br />
+
+<h3> Die Datenverkehrs-Statistik zeigt falsche oder keine Werte. </h3>
+Du brauchst eine aktuellere Version vom heartbeat OpenWRT Paket. Ab der <a href='http://firmware.pberg.freifunk.net/backfire/10.03.1-RC6-timestamp/2011-09-26_23-27/'>pberg-Firmware 20110926</a> 
+ist die aktuelle Version automatisch dabei.
+<br /><br />
+
+<h3> Woher kommen die Daten auf der Karte?  </h3>
+<h3>Wieso sieht man keine Verbindung zwischen meinen Ger&auml;ten? </h3>
+Die Daten kommen aus zwei Quellen:<br />
+Der heartbeat &uuml;bertr&auml;gt die im Freifunkassistenten eingetragene Position deines Ger&auml;ts. Diese wird auf der Karte angezeigt.
+Zus&auml;tzlich arbeitet auf <a href='http://pberg.freifunk.net'>pberg.freifunk.net</a> ein Skript, welches die Topology des Freifunk Meshnetzwerkes scannt.
+Die enthaltenen Knoten werden, sofern m&ouml;glich mit den Daten der heartbeat Datenbank verkn&uuml;pft und zusammen mit den Links angezeigt. 
+Bisher ist die Karte also auf die Informationen eines Knotens im Netz beschr&auml;nkt.
+<br /><br />
+In Zukunft werde ich eine andere L&ouml;sung f&uuml;r die Karte anbieten. Die <a href='http://wurststulle.dyndns.org/yaffmap/trac'>yaffmap</a> ist ein Nachfolger der alten Freifunkkartensoftware und bietet viele neue Features.
+Pro Ger&auml;t werden die Topology-Informationen zu einem yaffmap-Backend &uuml;bertragen. Mehrere yaffmap-Backends synchronisieren sich gegenseitig. 
+Damit wird es leichter auch kleine Netzwerke in der Karte darzustellen. Eine Vorschau auf die neue Karte ist bereits unter <a href='http://yaffmap.basicinside.de/map/'>yaffmap.basicinside.de</a> in Betrieb.
+<br /><br />
+<h3> Wem w&uuml;rdest du danken? Und wof&uuml;r? </h3>
+
+Alexander Morlang (Piratenfreifunk) - Idee vom heartbeat Ranglistenkonzept und das node-id Paket<br />
+Andreas Pittrich (Piratenfreifunk) - Design und Debugging<br />
+<br />
+Patrick Grimm (Kiezfunk) - Packetverwaltung, Codereview und diverse Verbesserungen<br />
+Elias Turske (Kiezfunk) - Feedback und Debugging<br />
+Thomas Arden (Kiezfunk) - Feedback und Debugging<br />
+<br />
+Thomas H&uuml;hn (Freifunk Sundhausen) - Idee f&uuml;r die Datenverkehr-Statistik
+<br /><br />
+und den Nutzern von heartbeat - Ohne Euch w&auml;re es nutzlos.

@@ -35,6 +35,7 @@ HeartbeatMonitor::Application.routes.draw do
   resources :nodes
   match 'karte' => 'maps#index', :as => :karte
   resources :maps
+  match '/faq/' => 'faqs#index'
   match '/' => 'highscores#index'
   match '/:controller(/:action(/:id))'
   root :to => "highscores#index"

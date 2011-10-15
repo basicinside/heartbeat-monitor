@@ -6,7 +6,7 @@ require 'savon'
 class PushYaffmap
   def initialize
     client = Savon::Client.new do
-      wsdl.document = 'http://yaffmap.gross-holger.de/soap.php?wsdl'
+      wsdl.document = 'http://yaffmap.basicinside.de/soap.php?wsdl'
     end
     #response = client.request :get_backends do
     #  soap.body = { :version => '0.1-21' }
