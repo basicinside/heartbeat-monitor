@@ -274,7 +274,6 @@ class NodesController < ApplicationController
     #support older version typo
     params[:version]  ||= params[:rev]
     params[:neighbors] ||= params[:neighboors]
-    #check for node
 
     # node exists without heartbeat
     node = Node.find_by_node_id(params[:id])	
@@ -283,11 +282,13 @@ class NodesController < ApplicationController
     end
 
     #update or create values
-    node.version 	= params[:version] if params[:version]
     node.name 	= params[:name] if params[:name]
+    node.model = params[:model] if params[:model]
+    node.default_ipv4 = params[:ipv4] if params[:ipv4]
+    node.default_ipv6 = params[:ipv6] if params[:ipv6]
+    node.version 	= params[:version] if params[:version]
     node.lat 	= params[:lat] if params[:lat]
     node.lon 	= params[:lon] if params[:lon]
-    node.model = params[:model] if params[:model]
     node.save
 
     if node.last_seen.nil? || node.last_seen < Date.today
