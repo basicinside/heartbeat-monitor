@@ -277,16 +277,17 @@ class NodesController < ApplicationController
     #check for node
 
     # node exists without heartbeat
-    node = Node.find_by_name(params[:name], :conditions => ['id = NULL'])	
-    if node.nil?
-      node = Node.find_or_create_by_node_id(params[:node_id]) 
+    node = Node.find_by_node_id(params[:id])	
+    if node.nil? 
+      node = Node.find_or_create_by_name(params[:name]) 
     end
 
     #update or create values
-    node.version 	= params[:version] 		if params[:version]
-    node.name 	= params[:name] 	if params[:name]
-    node.lat 	= params[:lat] 		if params[:lat]
-    node.lon 	= params[:lon] 		if params[:lon]
+    node.version 	= params[:version] if params[:version]
+    node.name 	= params[:name] if params[:name]
+    node.lat 	= params[:lat] if params[:lat]
+    node.lon 	= params[:lon] if params[:lon]
+    node.model = params[:model] if params[:model]
     node.save
 
     if node.last_seen.nil? || node.last_seen < Date.today
