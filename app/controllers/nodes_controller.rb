@@ -283,6 +283,7 @@ class NodesController < ApplicationController
 
     #update or create values
     node.name 	= params[:name] if params[:name]
+    node.arch   = params[:arch] if params[:arch]
     node.model = params[:model] if params[:model]
     node.default_ipv4 = params[:ipv4] if params[:ipv4]
     node.default_ipv6 = params[:ipv6] if params[:ipv6]
