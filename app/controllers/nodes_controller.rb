@@ -276,9 +276,9 @@ class NodesController < ApplicationController
     params[:neighbors] ||= params[:neighboors]
 
     # node exists without heartbeat
-    node = Node.find_by_node_id(params[:id])	
+      node = Node.find_by_node_id(params[:node_id])	
     if node.nil? 
-      node = Node.find_or_create_by_name(params[:name]) 
+    node = Node.find_or_create_by_name(params[:name]) 
     end
 
     #update or create values
