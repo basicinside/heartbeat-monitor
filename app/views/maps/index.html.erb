@@ -22,8 +22,9 @@ displayProjection: new OpenLayers.Projection("EPSG:4326")
 map.addControl(new OpenLayers.Control.Permalink("permalink"));
 
 var layerMapnik = new OpenLayers.Layer.OSM.Mapnik("Mapnik");
-var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
-map.addLayers([layerMapnik,layerTah]);
+//var layerTah = new OpenLayers.Layer.OSM.Osmarender("Tiles@Home");
+//map.addLayers([layerMapnik,layerTah]);
+map.addLayer(layerMapnik);
 
 var kml = new OpenLayers.Layer.GML("Nodes", "/nodes/feed", 
     {
