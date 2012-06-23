@@ -68,7 +68,6 @@ function map() {
 
 	// load Nodes
 	for ( var i = 0; i < nodes.length; i++) {
-		console.log(nodes[i].name);
 		hashNodes[nodes[i].id] = nodes[i];
 		var feature = new OpenLayers.Feature.Vector(
 				new OpenLayers.Geometry.Point(nodes[i].lon, nodes[i].lat)
@@ -171,19 +170,18 @@ function map() {
       map.displayProjection, map.projection);
       map.setCenter(lonLat, zoom);
   } else {                
-	  if (navigator.geolocation) {
-		  navigator.geolocation.getCurrentPosition(function(position) {
+	  if (navigator.geolocation && navigator.geolocation) {
+		  var ret = navigator.geolocation.getCurrentPosition(function(position) {
 			  lat = position.coords.latitude;
 			  lon = position.coords.longitude;
 			  var lonLat = new OpenLayers.LonLat(lon, lat).transform(
 				  	map.displayProjection, map.projection);
 			  map.setCenter(lonLat, zoom);
-		  });
-	  } else {
+		  }, function(err) { 
 		  var lonLat = new OpenLayers.LonLat(13.483937263488770,
 				  52.562709808349609).transform(map.displayProjection,
 			  	map.projection);
-		  map.setCenter(lonLat, zoom);
+		  map.setCenter(lonLat, zoom); });
 	  }
   }
 	map
