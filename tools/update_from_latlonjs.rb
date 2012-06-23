@@ -52,10 +52,20 @@ class LatLonJSUpdate
       link = Link.new
       link.node1 = nodeA.id
       link.node2 = nodeB.id
-      link.quality = data[2].strip
+      link.lq = data[2].strip
+      link.nlq = data[3].strip
+      link.quality = data[4].strip
       link.last_seen = Date.today
       link.save
     else
+      if nodeA.id == links.node1 
+        links.lq = data[2].strip
+        links.nlq = data[3].strip
+      else
+        links.lq = data[3].strip
+        links.nlq = data[2].strip
+      end
+      links.quality = data[2].strip
       links.last_seen = Date.today
       links.save
     end
