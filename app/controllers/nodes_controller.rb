@@ -4,7 +4,7 @@ class NodesController < ApplicationController
 
   def update
     @node = Node.find(params[:id])
-
+    @today = Date.today
     if current_user && current_user.id == @node.user_id && @node.update_attributes(params[:node])
       flash[:notice] = "Bild erfolgreich hochgeladen."
     else
