@@ -3,6 +3,15 @@ class MapsController < ApplicationController
     render :layout => false
   end
   def map
+    if params[:lat] && params[:lon]
+      @lat = params[:lat]
+      @lon = params[:lon]
+    end
+    if params[:zoom] 
+      @zoom = params[:zoom]
+    end
+
+
     last_seen = Date.today - 7.days
     nodes = []
     links = []

@@ -9,6 +9,13 @@
   <body onload='map()'>
     <div id="fullmap"></div>
     <script>
+      <% if @lat && @lon %>
+        window.lat = <%= @lat %>;
+        window.lon = <%= @lon %>;
+      <% end %>
+      <% if @zoom %>
+        window.zoom = <%= @zoom %>;
+      <% end %>
       window.nodes = <%= raw @nodes %>;
       window.links = <%= raw @links %>;
     </script>

@@ -5,8 +5,6 @@ var feature;
 var popup;
 var map;
 
-var zoom = 16;
-
 var linkColors = [
   '#FF0000', // 0
   '#FF3300', // 10
@@ -37,6 +35,10 @@ var linkWidths = [
 
 
 function map() {
+  if (!window.zoom) 
+     var zoom = 16;
+  else 
+     var zoom = window.zoom;
 	map = new OpenLayers.Map('fullmap', {
 		maxExtent : new OpenLayers.Bounds(-20037508.34, -20037508.34,
 				20037508.34, 20037508.34),
@@ -139,7 +141,6 @@ function map() {
 		"featureselected" : onSelect,
 		"featureunselected" : onUnselect
 	});
-
 	/* Control Panel */
 	var p = new OpenLayers.Control.Panel({
 		'displayClass' : 'olControlEditingToolbar'
@@ -161,30 +162,35 @@ function map() {
 
 	map.addControl(p);
 	p.addControls([ new OpenLayers.Control.Navigation(), control, m ]);
-
 	map.addLayers([ osm, linksLayer, nodesLayer ]);
-
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			lat = position.coords.latitude;
-			lon = position.coords.longitude;
-			var lonLat = new OpenLayers.LonLat(lon, lat).transform(
-					map.displayProjection, map.projection);
-			map.setCenter(lonLat, zoom);
-		});
-	} else {
-		var lonLat = new OpenLayers.LonLat(13.483937263488770,
-				52.562709808349609).transform(map.displayProjection,
-				map.projection);
-		map.setCenter(lonLat, zoom);
-	}
-
+  
+  if (window.lat && window.lon) {
+    if (!window.zoom) 
+      var zoom = 18;
+    var lonLat = new OpenLayers.LonLat(window.lon, window.lat).transform(
+      map.displayProjection, map.projection);
+      map.setCenter(lonLat, zoom);
+  } else {                
+	  if (navigator.geolocation) {
+		  navigator.geolocation.getCurrentPosition(function(position) {
+			  lat = position.coords.latitude;
+			  lon = position.coords.longitude;
+			  var lonLat = new OpenLayers.LonLat(lon, lat).transform(
+				  	map.displayProjection, map.projection);
+			  map.setCenter(lonLat, zoom);
+		  });
+	  } else {
+		  var lonLat = new OpenLayers.LonLat(13.483937263488770,
+				  52.562709808349609).transform(map.displayProjection,
+			  	map.projection);
+		  map.setCenter(lonLat, zoom);
+	  }
+  }
 	map
 			.addControls([ new OpenLayers.Control.Navigation(),
 					new OpenLayers.Control.ZoomIn(),
 					new OpenLayers.Control.ZoomOut() ]);
   control.activate();
-
 }
 
 function onSelect(evt) {
