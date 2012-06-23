@@ -33,7 +33,8 @@ HeartbeatMonitor::Application.routes.draw do
   match 'nodes/feed' => 'nodes#feed', :as => :nodes_feed
   match 'links/feed' => 'links#feed', :as => :links_feed
   resources :nodes
-  match 'karte' => 'maps#index', :as => :karte
+  match 'karte' => 'maps#map', :as => :karte
+  match 'karte2' => 'maps#map', :as => :karte2
   resources :maps
   match '/faq/' => 'faqs#index'
   match '/' => 'highscores#index'
