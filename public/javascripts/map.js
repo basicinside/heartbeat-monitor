@@ -193,22 +193,9 @@ function map() {
 
 function onSelect(evt) {
 	feature = evt.feature;
-  if (feature.node) {
-  if (feature.node.ipv4)
-    var content = "<a href='http://" + feature.node.ipv4 + "'>" + feature.node.name + "</a>";
-  else
-    var content = feature.node.name;
 	popup = new OpenLayers.Popup.FramedCloud("featurePopup", feature.geometry
 			.getBounds().getCenterLonLat(), new OpenLayers.Size(120, 100),
-			content, null, true, onUnselect);
-  }
-  else {
-	popup = new OpenLayers.Popup.FramedCloud("featurePopup", feature.geometry
-			.getBounds().getCenterLonLat(), new OpenLayers.Size(120, 100),
-			hashNodes[feature.link.from].name + " (" + feature.link.lq + 
-      ") <--> " + hashNodes[feature.link.to].name + "(" + feature.link.nlq + ")" , 
-                                            null, true, onUnselect);
-  }
+			popupContent(feature), null, true, onUnselect);
 	map.addPopup(popup);
 }
 
@@ -231,3 +218,29 @@ function onClickMeasure(event) {
 			});
 	map.addPopup(measurePopup);
 }
+
+function popupContent(obj) {
+  if (obj.node)
+    return popupNode(obj.node);
+  else
+    return popupLink(obj.link);
+}
+
+function popupNode(node) {
+  return id2node(node.id)
+}
+
+function popupLink(link) {
+  return id2node(link.from) + " (" + link.lq + ") <---> " + id2node(link.to) + " (" + link.nlq + ")";
+}
+
+function id2node(id) {
+  var node = hashNodes[id];
+  if (node.ipv4)
+    return "<a href='http://" + node.ipv4 + "'>" + node.name + "</a>";
+  else
+    return node.name
+}
+
+
+
