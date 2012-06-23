@@ -1,4 +1,5 @@
 class HighscoresController < ApplicationController
+  caches_page :index
 
   @@last_seen = Date.today - 7.days
 

@@ -1,4 +1,5 @@
 class MapsController < ApplicationController
+  caches_page :map
   def index
     render :layout => false
   end

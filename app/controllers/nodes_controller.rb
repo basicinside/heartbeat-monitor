@@ -1,4 +1,5 @@
 class NodesController < ApplicationController
+  caches_page :index, :show
   require 'open-uri'
   require 'digest/md5'
 
@@ -276,7 +277,7 @@ class NodesController < ApplicationController
     params[:neighbors] ||= params[:neighboors]
 
     # node exists without heartbeat
-      node = Node.find_by_node_id(params[:node_id])	
+    node = Node.find_by_node_id(params[:node_id])	
     if node.nil? 
     node = Node.find_or_create_by_name(params[:name]) 
     end
@@ -290,6 +291,7 @@ class NodesController < ApplicationController
     node.version 	= params[:version] if params[:version]
     node.lat 	= params[:lat] if params[:lat]
     node.lon 	= params[:lon] if params[:lon]
+    node.node_id = params[:node_id]
     node.save
 
     if node.last_seen.nil? || node.last_seen < Date.today
